@@ -1,0 +1,4 @@
+time.c:15:9:decToBcd	16	static
+time.c:22:5:bcdToDec	16	static
+time.c:42:6:set_Time	48	static
+time.c:57:6:get_Time	32	static

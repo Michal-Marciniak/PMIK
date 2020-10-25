@@ -1,0 +1,5 @@
+alarm.c:27:6:rtc_set_time	40	static
+alarm.c:161:6:rtc_set_alarm	72	static
+alarm.c:195:6:HAL_RTC_AlarmAEventCallback	16	static
+alarm.c:199:6:to_do_on_alarm	8	static
+alarm.c:212:6:HAL_GPIO_EXTI_Callback	16	static
