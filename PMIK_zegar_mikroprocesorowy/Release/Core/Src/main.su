@@ -1,0 +1,4 @@
+main.c:210:6:SystemClock_Config	112	static
+main.c:91:5:main	16	static
+main.c:261:6:HAL_UART_RxCpltCallback	8	static
+main.c:281:6:Error_Handler	0	static

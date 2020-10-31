@@ -29,7 +29,8 @@ Core/Src/lcd_i2c.o: ../Core/Src/lcd_i2c.c ../Core/Inc/lcd_i2c.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rtc_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/lcd_own_chars.h
+ ../Core/Inc/i2c.h ../Core/Inc/main.h ../Core/Inc/lcd_own_chars.h \
+ ../Core/Inc/time.h
 
 ../Core/Inc/lcd_i2c.h:
 
@@ -98,3 +99,5 @@ Core/Src/lcd_i2c.o: ../Core/Src/lcd_i2c.c ../Core/Inc/lcd_i2c.h \
 ../Core/Inc/main.h:
 
 ../Core/Inc/lcd_own_chars.h:
+
+../Core/Inc/time.h:

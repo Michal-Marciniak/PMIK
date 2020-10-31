@@ -15,6 +15,7 @@ void rtc_set_alarm (uint8_t hour, uint8_t min, uint8_t sec, uint8_t day);
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc);
 
 void to_do_on_alarm(void);
+void to_do_on_alarm_off(void);
 
 // Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);

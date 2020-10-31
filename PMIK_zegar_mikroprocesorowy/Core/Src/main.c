@@ -1,21 +1,14 @@
 /* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+
+/* Projekt zegara mikroprocesorowego zrealizowanego na płytce Nucleo F401RE.
+ * Układ posiada możliwość wyświetlania czasu, daty lub alarmów na wyświetlaczu LCD HD44780,
+ * podłączonym do płytki za pomocą interfejsu i2c.
+ * Dodatkowo układ posiada moduł RTC czasu rzeczywistego, dzięki któremu możliwe jest
+ * zapamiętanie aktualnego czasu i daty, nawet po wyłączeniu zasilania mikroprocesora.
+ * Za pomocą klawiatury w komputerze, użtykownik jest w stanie zmienić czas, datę lub nastawić alarm.
+ * Komunikacja ta odbywa się za pomocą intefejsu USART.
+ */
+
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -53,10 +46,8 @@
 
 /* USER CODE BEGIN PV */
 
-uint8_t received_uart_data, alarm_flag;
-
-// tablica przechowująca czas i datę, wyświetlane na LCD
-char time_date_buffer[11];
+uint8_t uart_rx_data;
+uint8_t alarm_flag, uart_flag;
 
 /* USER CODE END PV */
 
@@ -68,23 +59,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-  /****************** TIME BEGIN ******************/
-
-	// Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231
-	typedef struct {
-		uint8_t seconds;
-		uint8_t minutes;
-		uint8_t hour;
-		uint8_t dayofweek;
-		uint8_t dayofmonth;
-		uint8_t month;
-		uint8_t year;
-	} TIME;
-
-	TIME time;
-
-  /****************** TIME END ******************/
 
 /* USER CODE END 0 */
 
@@ -118,31 +92,42 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
-  MX_USART2_UART_Init();
   MX_RTC_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
   /****************** UART BEGIN ******************/
 
   // Funkcja odpowiedzialna za odbiór jednego znaku z uart2 w trybie przerwaniowym, i zapisanie go w zmiennej uart_rx_data.
   // Po odebraniu znaku, nastąpi przerwanie które zostanie obsłużone przez funkcję callback.
-  HAL_UART_Receive_IT(&huart2, &received_uart_data, 1);
+  HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+
+  // wystąpienie przerwania po ukończeniu odbioru informacji (RXNE - Register Not Empty)
+  //__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
+  // wystąpienie przerwania po ukończeniu transmisji (TC - Transmition Complete)
+  __HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
 
   /****************** UART END ******************/
 
   /****************** LCD BEGIN ******************/
 
   lcd_init();
+  lcd_back_light_on();
 
   /****************** LCD END ******************/
 
-  // Wyłączenie brzęczyka i diody
+  // Wyłączenie brzęczyka oraz diody po włączeniu uC
   HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(Green_LED_GPIO_Port, Green_LED_Pin, GPIO_PIN_RESET);
 
-  //set_Time(30, 01, 17, 7, 25, 10, 20);
+  // Metoda odpowiedzialna za ustawienie czasu i daty
+  // set_Time(sec, min, hours, dow, dom, month, year)
+  // set_Time(10, 39, 13, 6, 31, 10, 20);
+
+  // Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
   rtc_set_time();
-  rtc_set_alarm(0, 0, 2, 0);
+  // rtc_set_alarm(ilość dni do alarmu, ilość godzin do alarmu, ilość minut do alarmu, ilość sekund do alarmu)
+  rtc_set_alarm(0, 0, 0, 3);
 
   /* USER CODE END 2 */
 
@@ -154,23 +139,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	get_Time();
-
-	// wyświetlanie godziny na LCD
-	sprintf(time_date_buffer, "%02d:%02d:%02d", time.hour, time.minutes, time.seconds);
-	lcd_first_line();
-	lcd_send_string(time_date_buffer);
-
-	// wyświetlanie nazwy dnia tygodnia na LCD
-	lcd_set_cursor(0, 10);
-	lcd_show_week_day_name(time.dayofweek);
-
-	// wyświetlanie daty na LCD
-	sprintf(time_date_buffer, "%02d-%02d-20%02d", time.dayofmonth, time.month, time.year);
-	lcd_second_line();
-	lcd_send_string(time_date_buffer);
-
-	HAL_Delay(1000);
+	lcd_time_and_date_init();
 
 	if(alarm_flag) {
 
@@ -178,15 +147,11 @@ int main(void)
 			to_do_on_alarm();
 		}
 
-		lcd_clear();
+		to_do_on_alarm_off();
+	}
 
-		lcd_send_string("Alarm wy");
-		lcd_send_own_char(3);
-		lcd_send_own_char(8);
-		lcd_send_string("czony");
-		HAL_Delay(3000);
-
-		lcd_clear();
+	if(uart_flag) {
+		lcd_to_do_on_uart();
 	}
 
   }
@@ -217,7 +182,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 84;
+  RCC_OscInitStruct.PLL.PLLN = 64;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -229,11 +194,11 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }
@@ -250,14 +215,15 @@ void SystemClock_Config(void)
 // Funkcja odpowiedzialna za obsługę przerwania spowodowanego odebraniem danych na UART2
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
-	// Musimy sprawdzić czy przerwanie wywołał uart2, a nie coś innego
+	// Musimy sprawdzić czy przerwanie wywołał uart1, a nie coś innego
 	if(huart->Instance==USART2)
 	{
-		// TODO
+		if(uart_rx_data == 's') {
+			uart_flag = 1;
+		}
 
-
-		// Nasłuchuj ponownie na kolejne znaki
-		HAL_UART_Receive_IT(&huart2, &received_uart_data, 1);
+		// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+		HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
 	}
 
 }

@@ -8,6 +8,7 @@
 #include "rtc.h"
 #include "time.h"
 #include "lcd_i2c.h"
+#include "usart.h"
 
 // Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231
 typedef struct {
@@ -23,6 +24,9 @@ typedef struct {
 TIME time;
 
 uint8_t alarm_flag;
+
+char alarm_on_msg[20] = "Wylacz alarm!\n\r";
+char alarm_off_msg[20] = "Alarm wylaczony!\n\r";
 
 void rtc_set_time (void)
 {
@@ -158,15 +162,15 @@ void rtc_set_time (void)
 
 // Funkcja odpowiedzialna za ustawienie alarmu o danej godzinie, i w danym dniu.
 // Jako parametry przyjmuje ilość godzin, minut, sekund oraz dni, pozostałych do włączenia alarmu
-void rtc_set_alarm (uint8_t hour, uint8_t min, uint8_t sec, uint8_t day)
+void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 {
 
 	get_Time();
 
+	uint8_t alarm_day = time.dayofmonth + day;
 	uint8_t alarm_hour = time.hour + hour;
 	uint8_t alarm_min = time.minutes + min;
 	uint8_t alarm_sec = time.seconds + sec;
-	uint8_t alarm_day = time.dayofmonth + day;
 
 	RTC_AlarmTypeDef sAlarm;
 
@@ -199,13 +203,25 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 void to_do_on_alarm(void) {
 
 	lcd_clear();
-	lcd_send_string("Wy");
-	lcd_send_own_char(3);
-	lcd_send_own_char(8);
-	lcd_send_string("cz alarm !!!");
-	HAL_Delay(1000);
+	//lcd_back_light_on();
 
 	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_SET);
+	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_on_msg, 20);
+	lcd_send_alarm_on_msg();
+
+	HAL_Delay(1000);
+}
+
+void to_do_on_alarm_off(void) {
+
+	lcd_clear();
+	//lcd_back_light_on();
+
+	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_off_msg, 20);
+	lcd_send_alarm_off_msg();
+	HAL_Delay(3000);
+
+	lcd_clear();
 }
 
 // Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku

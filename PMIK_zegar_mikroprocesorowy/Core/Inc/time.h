@@ -8,6 +8,9 @@
 #ifndef INC_TIME_H_
 #define INC_TIME_H_
 
+#include <stdio.h>
+#include <stdint.h>
+
 // Funkcja konwertująca wartość dziesiętną na binarną,
 // ponieważ dane zapisywane do rejestrów DS3231 muszą być postaci binarnej
 uint8_t decToBcd(int val);
