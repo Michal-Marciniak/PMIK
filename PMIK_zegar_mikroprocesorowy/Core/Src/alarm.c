@@ -23,10 +23,17 @@ typedef struct {
 
 TIME time;
 
+uint8_t alarm_counter = 0;
+uint8_t alarm_activated_flag;
+uint8_t alarm_set_flag;
 uint8_t alarm_flag;
+uint8_t new_alarm_time[5];
+
+uint8_t uart_rx_data;
 
 char alarm_on_msg[20] = "Wylacz alarm!\n\r";
 char alarm_off_msg[20] = "Alarm wylaczony!\n\r";
+char alarm_set_msg[20] = "Alarm ustawiony!\n\r";
 
 void rtc_set_time (void)
 {
@@ -160,6 +167,27 @@ void rtc_set_time (void)
 
 }
 
+void activate_alarm() {
+	if(uart_rx_data == 'a') {
+		alarm_activated_flag = 1;
+	}
+
+	if(alarm_activated_flag) {
+
+		new_alarm_time[alarm_counter] = uart_rx_data;
+
+		++alarm_counter;
+
+		if(alarm_counter == 5) {
+			alarm_set_flag = 1;
+		}
+
+	}
+
+	// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+}
+
 // Funkcja odpowiedzialna za ustawienie alarmu o danej godzinie, i w danym dniu.
 // Jako parametry przyjmuje ilość godzin, minut, sekund oraz dni, pozostałych do włączenia alarmu
 void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
@@ -170,7 +198,9 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 	uint8_t alarm_day = time.dayofmonth + day;
 	uint8_t alarm_hour = time.hour + hour;
 	uint8_t alarm_min = time.minutes + min;
-	uint8_t alarm_sec = time.seconds + sec;
+
+	// włączamy alarm 2 sekundy wcześniej niż zaplanowany, ponieważ transmisja uartem trwa 2s
+	uint8_t alarm_sec = time.seconds + sec - 2;
 
 	RTC_AlarmTypeDef sAlarm;
 
@@ -191,6 +221,8 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 	{
 		Error_Handler();
 	}
+
+	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_set_msg, 20);
   /* USER CODE BEGIN RTC_Init 5 */
 
   /* USER CODE END RTC_Init 5 */

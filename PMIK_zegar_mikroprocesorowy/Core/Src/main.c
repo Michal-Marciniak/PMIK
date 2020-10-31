@@ -46,8 +46,36 @@
 
 /* USER CODE BEGIN PV */
 
+// Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231
+typedef struct {
+	uint8_t seconds;
+	uint8_t minutes;
+	uint8_t hour;
+	uint8_t dayofweek;
+	uint8_t dayofmonth;
+	uint8_t month;
+	uint8_t year;
+} TIME;
+
+TIME time;
+
+/*	Alarm	*/
+uint8_t new_alarm_time[5];		// tablica przechowująca nowy czas alarmu, ustawiony przez użytkownika
+uint8_t alarm_flag; 			// flaga do sygnalizowania alarmu
+uint8_t alarm_set_flag; 		// flaga do sygnalizowania, że alarm został pomyślnie ustawiony
+uint8_t alarm_activated_flag;	// flaga sygnalizująca, że użytkownik chce ustawić alarm a nie np. datę
+uint8_t alarm_counter;
+/*	Alarm	*/
+
+/*	Time and Date	*/
+uint8_t new_time_and_date[7];
+/*	Time and Date	*/
+
+
 uint8_t uart_rx_data;
-uint8_t alarm_flag, uart_flag;
+
+
+
 
 /* USER CODE END PV */
 
@@ -126,8 +154,6 @@ int main(void)
 
   // Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
   rtc_set_time();
-  // rtc_set_alarm(ilość dni do alarmu, ilość godzin do alarmu, ilość minut do alarmu, ilość sekund do alarmu)
-  rtc_set_alarm(0, 0, 0, 3);
 
   /* USER CODE END 2 */
 
@@ -150,8 +176,36 @@ int main(void)
 		to_do_on_alarm_off();
 	}
 
-	if(uart_flag) {
-		lcd_to_do_on_uart();
+	// wykonaj jeśli użytkownik ustawił nowy czas alarmu
+	if(alarm_set_flag) {
+
+		get_Time();
+
+		uint8_t days_to_alarm, hours_to_alarm, minutes_to_alarm, seconds_to_alarm;
+		char alarm_details_msg[9];
+
+		days_to_alarm = new_alarm_time[1];	// dni to drugi element, ponieważ pierwszy to literka a
+											// mówiąca o tym, że ustawiamy alarm.
+											// a jak alarm
+		hours_to_alarm = new_alarm_time[2];
+		minutes_to_alarm = new_alarm_time[3];
+		seconds_to_alarm = new_alarm_time[4];
+
+		rtc_set_alarm(days_to_alarm, hours_to_alarm, minutes_to_alarm, seconds_to_alarm);
+
+		lcd_clear();
+
+		sprintf(alarm_details_msg, "%02d:%02d:%02d", time.hour + hours_to_alarm, time.minutes + minutes_to_alarm, time.seconds + seconds_to_alarm);
+		lcd_send_string("Alarm na godz.:");
+		lcd_second_line();
+		lcd_send_string(alarm_details_msg);
+
+		HAL_Delay(3000);
+		lcd_clear();
+
+		alarm_set_flag = 0;
+		alarm_activated_flag = 0;
+		alarm_counter = 0;
 	}
 
   }
@@ -218,12 +272,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	// Musimy sprawdzić czy przerwanie wywołał uart1, a nie coś innego
 	if(huart->Instance==USART2)
 	{
-		if(uart_rx_data == 's') {
-			uart_flag = 1;
-		}
-
-		// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
-		HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+		activate_alarm();
 	}
 
 }

@@ -284,19 +284,6 @@ void lcd_show_week_day_name(uint8_t day_number) {
 	}
 }
 
-void lcd_to_do_on_uart(void) {
-
-	lcd_clear();
-	lcd_back_light_on();
-
-	lcd_send_string("UART DATA");
-	HAL_Delay(1000);
-
-	lcd_clear();
-	//lcd_back_light_off();
-	uart_flag = 0;
-}
-
 void lcd_show_battery_level(uint8_t bat_lev) {
 
 	lcd_set_cursor(0, 11);

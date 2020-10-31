@@ -48,7 +48,6 @@ void lcd_send_alarm_off_msg(void);
 void lcd_generate_own_chars(void);
 void lcd_send_own_char(uint8_t char_num);
 void lcd_show_week_day_name(uint8_t day_number);
-void lcd_to_do_on_uart(void);
 void lcd_show_battery_level(uint8_t battery_level);
 
 #endif /* INC_LCD_I2C_H_ */
