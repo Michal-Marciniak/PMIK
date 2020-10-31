@@ -1,7 +1,8 @@
-alarm.c:38:6:rtc_set_time	40	static
-alarm.c:170:6:activate_alarm	8	static
-alarm.c:193:6:rtc_set_alarm	72	static
-alarm.c:231:6:HAL_RTC_AlarmAEventCallback	16	static
-alarm.c:235:6:to_do_on_alarm	8	static
-alarm.c:247:6:to_do_on_alarm_off	8	static
-alarm.c:260:6:HAL_GPIO_EXTI_Callback	16	static
+alarm.c:47:6:rtc_set_time	40	static
+alarm.c:181:6:rtc_set_alarm	72	static
+alarm.c:220:6:activate_time_and_date	8	static
+alarm.c:243:6:activate_alarm	8	static
+alarm.c:267:6:HAL_RTC_AlarmAEventCallback	16	static
+alarm.c:271:6:to_do_on_alarm	8	static
+alarm.c:283:6:to_do_on_alarm_off	8	static
+alarm.c:296:6:HAL_GPIO_EXTI_Callback	16	static

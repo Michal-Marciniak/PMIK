@@ -23,11 +23,20 @@ typedef struct {
 
 TIME time;
 
+/*	Activating alarm	*/
 uint8_t alarm_counter = 0;
 uint8_t alarm_activated_flag;
 uint8_t alarm_set_flag;
 uint8_t alarm_flag;
 uint8_t new_alarm_time[5];
+/*	Activating alarm	*/
+
+/*	Activating time and date	*/
+uint8_t time_and_date_counter = 0;
+uint8_t time_and_date_activated_flag;
+uint8_t time_and_date_set_flag;
+uint8_t new_time_and_date[8];
+/*	Activating time and date	*/
 
 uint8_t uart_rx_data;
 
@@ -167,27 +176,6 @@ void rtc_set_time (void)
 
 }
 
-void activate_alarm() {
-	if(uart_rx_data == 'a') {
-		alarm_activated_flag = 1;
-	}
-
-	if(alarm_activated_flag) {
-
-		new_alarm_time[alarm_counter] = uart_rx_data;
-
-		++alarm_counter;
-
-		if(alarm_counter == 5) {
-			alarm_set_flag = 1;
-		}
-
-	}
-
-	// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
-	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
-}
-
 // Funkcja odpowiedzialna za ustawienie alarmu o danej godzinie, i w danym dniu.
 // Jako parametry przyjmuje ilość godzin, minut, sekund oraz dni, pozostałych do włączenia alarmu
 void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
@@ -227,6 +215,54 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 
   /* USER CODE END RTC_Init 5 */
 }
+
+// Funkcja sygnalizująca, że użytkownik ustawia czas i datę
+void activate_time_and_date (void) {
+
+	if(uart_rx_data == 't') {
+		time_and_date_activated_flag = 1;
+	}
+
+	if(time_and_date_activated_flag) {
+
+		new_time_and_date[time_and_date_counter] = uart_rx_data;
+
+		++time_and_date_counter;
+
+		if(time_and_date_counter == 8) {
+			time_and_date_set_flag = 1;
+		}
+
+	}
+
+	// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+}
+
+// Funkcja sygnalizująca, że użytkownik ustawia alarm
+void activate_alarm() {
+
+	if(uart_rx_data == 'a') {
+		alarm_activated_flag = 1;
+	}
+
+	if(alarm_activated_flag) {
+
+		new_alarm_time[alarm_counter] = uart_rx_data;
+
+		++alarm_counter;
+
+		if(alarm_counter == 5) {
+			alarm_set_flag = 1;
+		}
+
+	}
+
+	// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+}
+
+
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 	alarm_flag = 1;

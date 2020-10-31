@@ -37,8 +37,8 @@ typedef struct {
 
 TIME time;
 
-// Funkcje do ustawiania i pobierania czasu i daty
-// Przekazywane wartości muszą być typu binarnego
+// Metoda odpowiedzialna za ustawienie czasu i daty
+// set_Time(sec, min, hour, dow, dom, month, year)
 void set_Time (uint8_t sec, uint8_t min, uint8_t hour, uint8_t dow, uint8_t dom, uint8_t month, uint8_t year)
 {
 	uint8_t time_to_write[7];

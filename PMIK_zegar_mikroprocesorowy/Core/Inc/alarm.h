@@ -9,9 +9,10 @@
 #define INC_ALARM_H_
 
 void rtc_set_time (void);
-
-void activate_alarm (void);
 void rtc_set_alarm (uint8_t hour, uint8_t min, uint8_t sec, uint8_t day);
+
+void activate_time_and_date (void);
+void activate_alarm (void);
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc);
 

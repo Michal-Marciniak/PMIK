@@ -67,15 +67,16 @@ uint8_t alarm_activated_flag;	// flaga sygnalizująca, że użytkownik chce usta
 uint8_t alarm_counter;
 /*	Alarm	*/
 
-/*	Time and Date	*/
-uint8_t new_time_and_date[7];
-/*	Time and Date	*/
+/*	Activating time and date	*/
+uint8_t time_and_date_counter;
+uint8_t time_and_date_activated_flag;
+uint8_t time_and_date_set_flag;
+uint8_t new_time_and_date[8];
+/*	Activating time and date	*/
 
-
+/*	Uart received data	*/
 uint8_t uart_rx_data;
-
-
-
+/*	Uart received data	*/
 
 /* USER CODE END PV */
 
@@ -148,10 +149,6 @@ int main(void)
   HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
   HAL_GPIO_WritePin(Green_LED_GPIO_Port, Green_LED_Pin, GPIO_PIN_RESET);
 
-  // Metoda odpowiedzialna za ustawienie czasu i daty
-  // set_Time(sec, min, hours, dow, dom, month, year)
-  // set_Time(10, 39, 13, 6, 31, 10, 20);
-
   // Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
   rtc_set_time();
 
@@ -206,6 +203,35 @@ int main(void)
 		alarm_set_flag = 0;
 		alarm_activated_flag = 0;
 		alarm_counter = 0;
+	}
+
+	if(time_and_date_set_flag) {
+
+		uint8_t new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year;
+		char new_date_details_msg[12];
+
+		new_sec = new_time_and_date[1];
+		new_min = new_time_and_date[2];
+		new_hour = new_time_and_date[3];
+		new_dow = new_time_and_date[4];
+		new_dom = new_time_and_date[5];
+		new_month = new_time_and_date[6];
+		new_year = new_time_and_date[7];
+
+		set_Time(new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year);
+
+		lcd_clear();
+		sprintf(new_date_details_msg, "%02d-%02d-20%02d", new_dom, new_month, new_year);
+		lcd_send_string("Nowa data:");
+		lcd_second_line();
+		lcd_send_string(new_date_details_msg);
+
+		HAL_Delay(3000);
+		lcd_clear();
+
+		time_and_date_set_flag = 0;
+		time_and_date_activated_flag = 0;
+		time_and_date_counter = 0;
 	}
 
   }
@@ -272,7 +298,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	// Musimy sprawdzić czy przerwanie wywołał uart1, a nie coś innego
 	if(huart->Instance==USART2)
 	{
+		activate_time_and_date();
 		activate_alarm();
+
+		// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+		HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
 	}
 
 }
