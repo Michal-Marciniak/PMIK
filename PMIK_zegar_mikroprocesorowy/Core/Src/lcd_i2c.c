@@ -32,7 +32,7 @@ TIME time;
 
 void lcd_init()
 {
-	/* sekwencja inicjalizująca wyświetlacz, z dokumentacji */
+	/* sekwencja z dokumentacji inicjalizująca wyświetlacz*/
 	HAL_Delay(40);
 	lcd_write_command(INIT_8_BIT_MODE);
 	HAL_Delay(5);
@@ -53,11 +53,12 @@ void lcd_init()
 	/* wyczyszczenie wyświetlacza */
 	lcd_clear();
 
-	/* włączenie podświetlenia */
+	/* wyłączenie podświetlenia */
 	//lcd_back_light_off();
 }
 
-void lcd_time_and_date_init() {
+// Funkcja odpowiedzialna za aktualizowanie i wyświetlanie na bieżąco wszystkich danych na wyświetlaczu LCD
+void lcd_display_refresh() {
 
 	get_Time();
 

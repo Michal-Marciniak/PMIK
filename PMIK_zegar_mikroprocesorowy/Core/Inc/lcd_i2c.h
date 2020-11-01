@@ -33,7 +33,7 @@
 #define SECOND_LINE	0xC0
 
 void lcd_init(void);
-void lcd_time_and_date_init(void);
+void lcd_display_refresh(void);
 void lcd_clear(void);
 void lcd_back_light_on(void);
 void lcd_back_light_off(void);

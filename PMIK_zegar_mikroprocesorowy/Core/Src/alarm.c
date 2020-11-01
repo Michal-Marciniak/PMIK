@@ -9,6 +9,7 @@
 #include "time.h"
 #include "lcd_i2c.h"
 #include "usart.h"
+#include <string.h>
 
 // Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231
 typedef struct {
@@ -23,28 +24,32 @@ typedef struct {
 
 TIME time;
 
-/*	Activating alarm	*/
-uint8_t alarm_counter = 0;
+uint8_t global_counter = 0;
+uint8_t global_buffer[5];
+
+/*	time	*/
+uint8_t time_activated_flag;
+uint8_t time_set_flag;
+/*	time	*/
+
+/*	date	*/
+uint8_t date_activated_flag;
+uint8_t date_set_flag;
+/*	date	*/
+
+/*	alarm	*/
 uint8_t alarm_activated_flag;
 uint8_t alarm_set_flag;
 uint8_t alarm_flag;
-uint8_t new_alarm_time[5];
-/*	Activating alarm	*/
-
-/*	Activating time and date	*/
-uint8_t time_and_date_counter = 0;
-uint8_t time_and_date_activated_flag;
-uint8_t time_and_date_set_flag;
-uint8_t new_time_and_date[8];
-/*	Activating time and date	*/
-
-uint8_t uart_rx_data;
 
 char alarm_on_msg[20] = "Wylacz alarm!\n\r";
 char alarm_off_msg[20] = "Alarm wylaczony!\n\r";
 char alarm_set_msg[20] = "Alarm ustawiony!\n\r";
+/*	alarm	*/
 
-void rtc_set_time (void)
+uint8_t uart_rx_data;
+
+void rtc_set_time ()
 {
 	  RTC_TimeTypeDef sTime;
 	  RTC_DateTypeDef sDate;
@@ -180,7 +185,6 @@ void rtc_set_time (void)
 // Jako parametry przyjmuje ilość godzin, minut, sekund oraz dni, pozostałych do włączenia alarmu
 void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 {
-
 	get_Time();
 
 	uint8_t alarm_day = time.dayofmonth + day;
@@ -210,27 +214,32 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 		Error_Handler();
 	}
 
-	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_set_msg, 20);
+	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_set_msg, strlen(alarm_set_msg));
   /* USER CODE BEGIN RTC_Init 5 */
 
   /* USER CODE END RTC_Init 5 */
 }
 
-// Funkcja sygnalizująca, że użytkownik ustawia czas i datę
-void activate_time_and_date (void) {
+// Funkcja sygnalizująca, że użytkownik ustawia nową godzinę na zegarku
+void activate_time () {
 
 	if(uart_rx_data == 't') {
-		time_and_date_activated_flag = 1;
+
+		date_activated_flag = 0;
+		alarm_activated_flag = 0;
+
+		global_counter = 0;
+		time_activated_flag = 1;
 	}
 
-	if(time_and_date_activated_flag) {
+	if(time_activated_flag) {
 
-		new_time_and_date[time_and_date_counter] = uart_rx_data;
+		global_buffer[global_counter] = uart_rx_data;
 
-		++time_and_date_counter;
+		++global_counter;
 
-		if(time_and_date_counter == 8) {
-			time_and_date_set_flag = 1;
+		if(global_counter == 3) {
+			time_set_flag = 1;
 		}
 
 	}
@@ -239,20 +248,53 @@ void activate_time_and_date (void) {
 	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
 }
 
-// Funkcja sygnalizująca, że użytkownik ustawia alarm
-void activate_alarm() {
+// Funkcja sygnalizująca, że użytkownik ustawia nową datę na zegarku
+void activate_date () {
+
+	if(uart_rx_data == 'd') {
+
+		time_activated_flag = 0;
+		alarm_activated_flag = 0;
+
+		global_counter = 0;
+		date_activated_flag = 1;
+	}
+
+	if(date_activated_flag) {
+
+		global_buffer[global_counter] = uart_rx_data;
+
+		++global_counter;
+
+		if(global_counter == 5) {
+			date_set_flag = 1;
+		}
+
+	}
+
+	// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+}
+
+// Funkcja sygnalizująca, że użytkownik ustawia nowy alarm
+void activate_alarm () {
 
 	if(uart_rx_data == 'a') {
+
+		time_activated_flag = 0;
+		date_activated_flag = 0;
+
+		global_counter = 0;
 		alarm_activated_flag = 1;
 	}
 
 	if(alarm_activated_flag) {
 
-		new_alarm_time[alarm_counter] = uart_rx_data;
+		global_buffer[global_counter] = uart_rx_data;
 
-		++alarm_counter;
+		++global_counter;
 
-		if(alarm_counter == 5) {
+		if(global_counter == 5) {
 			alarm_set_flag = 1;
 		}
 
@@ -268,24 +310,24 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 	alarm_flag = 1;
 }
 
-void to_do_on_alarm(void) {
+void to_do_on_alarm() {
 
 	lcd_clear();
 	//lcd_back_light_on();
 
 	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_SET);
-	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_on_msg, 20);
+	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_on_msg, strlen(alarm_on_msg));
 	lcd_send_alarm_on_msg();
 
 	HAL_Delay(1000);
 }
 
-void to_do_on_alarm_off(void) {
+void to_do_on_alarm_off() {
 
 	lcd_clear();
 	//lcd_back_light_on();
 
-	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_off_msg, 20);
+	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_off_msg, strlen(alarm_off_msg));
 	lcd_send_alarm_off_msg();
 	HAL_Delay(3000);
 

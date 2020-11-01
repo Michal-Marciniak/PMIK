@@ -46,7 +46,7 @@
 
 /* USER CODE BEGIN PV */
 
-// Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231
+// Struktura do przechowywania aktualnego czasu i daty, które będziemy odczytywać z modułu RTC DS3231
 typedef struct {
 	uint8_t seconds;
 	uint8_t minutes;
@@ -59,20 +59,24 @@ typedef struct {
 
 TIME time;
 
-/*	Alarm	*/
-uint8_t new_alarm_time[5];		// tablica przechowująca nowy czas alarmu, ustawiony przez użytkownika
-uint8_t alarm_flag; 			// flaga do sygnalizowania alarmu
-uint8_t alarm_set_flag; 		// flaga do sygnalizowania, że alarm został pomyślnie ustawiony
-uint8_t alarm_activated_flag;	// flaga sygnalizująca, że użytkownik chce ustawić alarm a nie np. datę
-uint8_t alarm_counter;
-/*	Alarm	*/
+uint8_t global_counter;			// globalny licznik, służący do ustawiania nowego czasu, daty i alarmu ustawionych przez użytkownika
+uint8_t global_buffer[5];		// globalny bufor przechowujący nowy czas, datę i alarm ustawione przez użytkownika
 
-/*	Activating time and date	*/
-uint8_t time_and_date_counter;
-uint8_t time_and_date_activated_flag;
-uint8_t time_and_date_set_flag;
-uint8_t new_time_and_date[8];
-/*	Activating time and date	*/
+/*	time	*/
+uint8_t time_activated_flag;	// flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy czas
+uint8_t time_set_flag;			// flaga sygnalizująca, że nowy czas został pomyślnie ustawiony
+/*	time	*/
+
+/*	date	*/
+uint8_t date_activated_flag;	// flaga sygnalizująca, że w tym momencie użytkownik ustawia nową date
+uint8_t date_set_flag;			// flaga sygnalizująca, że nowa data została pomyślnie ustawiona
+/*	date	*/
+
+/*	alarm	*/
+uint8_t alarm_activated_flag;	// flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy alarm
+uint8_t alarm_set_flag; 		// flaga sygnalizująca, że alarm został pomyślnie ustawiony
+uint8_t alarm_flag; 			// flaga sygnalizująca włączenie się alarmu
+/*	alarm	*/
 
 /*	Uart received data	*/
 uint8_t uart_rx_data;
@@ -125,32 +129,27 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  /****************** UART BEGIN ******************/
+  HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(Green_LED_GPIO_Port, Green_LED_Pin, GPIO_PIN_RESET);
 
+  /****************** LCD BEGIN ******************/
+  lcd_init();
+  lcd_back_light_on();
+  /****************** LCD END ******************/
+
+  rtc_set_time();	// Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
+
+  /****************** UART BEGIN ******************/
   // Funkcja odpowiedzialna za odbiór jednego znaku z uart2 w trybie przerwaniowym, i zapisanie go w zmiennej uart_rx_data.
-  // Po odebraniu znaku, nastąpi przerwanie które zostanie obsłużone przez funkcję callback.
+  // Po odebraniu znaku, nastąpi przerwanie które zostanie obsłużone przez funkcję callback HAL_UART_RxCpltCallback.
   HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
 
   // wystąpienie przerwania po ukończeniu odbioru informacji (RXNE - Register Not Empty)
   //__HAL_UART_ENABLE_IT(&huart2, UART_IT_RXNE);
-  // wystąpienie przerwania po ukończeniu transmisji (TC - Transmition Complete)
+
+  // wystąpienie przerwania po ukończeniu transmisji danych (TC - Transmition Complete)
   __HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
-
   /****************** UART END ******************/
-
-  /****************** LCD BEGIN ******************/
-
-  lcd_init();
-  lcd_back_light_on();
-
-  /****************** LCD END ******************/
-
-  // Wyłączenie brzęczyka oraz diody po włączeniu uC
-  HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(Green_LED_GPIO_Port, Green_LED_Pin, GPIO_PIN_RESET);
-
-  // Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
-  rtc_set_time();
 
   /* USER CODE END 2 */
 
@@ -162,31 +161,73 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	lcd_time_and_date_init();
+	lcd_display_refresh();
 
-	if(alarm_flag) {
+	// wykonaj jeśli użytkownik ustawił nową godzinę
+	if(time_set_flag) {
 
-		while (alarm_flag) {
-			to_do_on_alarm();
-		}
+		uint8_t new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year;
+		char new_time_details_msg[12];
 
-		to_do_on_alarm_off();
+		new_sec = time.seconds;
+		new_min = global_buffer[2];
+		new_hour = global_buffer[1];
+		new_dow = time.dayofweek;
+		new_dom = time.dayofmonth;
+		new_month = time.month;
+		new_year = time.year;
+
+		set_Time(new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year);
+
+		lcd_clear();
+		sprintf(new_time_details_msg, "%02d:%02d:%02d", new_hour, new_min, new_sec);
+		lcd_send_string("Ustawiony czas:");
+		lcd_second_line();
+		lcd_send_string(new_time_details_msg);
+		HAL_Delay(3000);
+		lcd_clear();
+
+		time_set_flag = 0;
+	}
+
+	// wykonaj jeśli użytkownik ustawił nową datę
+	if(date_set_flag) {
+
+		uint8_t new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year;
+		char new_date_details_msg[12];
+
+		new_sec = time.seconds;
+		new_min = time.minutes;
+		new_hour = time.hour;
+		new_dow = global_buffer[1];
+		new_dom = global_buffer[2];
+		new_month = global_buffer[3];
+		new_year = global_buffer[4];
+
+		set_Time(new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year);
+
+		lcd_clear();
+		sprintf(new_date_details_msg, "%02d-%02d-20%02d", new_dom, new_month, new_year);
+		lcd_send_string("Ustawiona data:");
+		lcd_second_line();
+		lcd_send_string(new_date_details_msg);
+		HAL_Delay(3000);
+		lcd_clear();
+
+		date_set_flag = 0;
 	}
 
 	// wykonaj jeśli użytkownik ustawił nowy czas alarmu
 	if(alarm_set_flag) {
 
-		get_Time();
-
 		uint8_t days_to_alarm, hours_to_alarm, minutes_to_alarm, seconds_to_alarm;
 		char alarm_details_msg[9];
 
-		days_to_alarm = new_alarm_time[1];	// dni to drugi element, ponieważ pierwszy to literka a
+		days_to_alarm = global_buffer[1];	// dni to drugi element, ponieważ pierwszy to literka a
 											// mówiąca o tym, że ustawiamy alarm.
-											// a jak alarm
-		hours_to_alarm = new_alarm_time[2];
-		minutes_to_alarm = new_alarm_time[3];
-		seconds_to_alarm = new_alarm_time[4];
+		hours_to_alarm = global_buffer[2];
+		minutes_to_alarm = global_buffer[3];
+		seconds_to_alarm = global_buffer[4];
 
 		rtc_set_alarm(days_to_alarm, hours_to_alarm, minutes_to_alarm, seconds_to_alarm);
 
@@ -196,42 +237,20 @@ int main(void)
 		lcd_send_string("Alarm na godz.:");
 		lcd_second_line();
 		lcd_send_string(alarm_details_msg);
-
 		HAL_Delay(3000);
 		lcd_clear();
 
 		alarm_set_flag = 0;
-		alarm_activated_flag = 0;
-		alarm_counter = 0;
 	}
 
-	if(time_and_date_set_flag) {
+	// wykonaj jeśli zaczął się alarm
+	if(alarm_flag) {
 
-		uint8_t new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year;
-		char new_date_details_msg[12];
+		while (alarm_flag) {
+			to_do_on_alarm();
+		}
 
-		new_sec = new_time_and_date[1];
-		new_min = new_time_and_date[2];
-		new_hour = new_time_and_date[3];
-		new_dow = new_time_and_date[4];
-		new_dom = new_time_and_date[5];
-		new_month = new_time_and_date[6];
-		new_year = new_time_and_date[7];
-
-		set_Time(new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year);
-
-		lcd_clear();
-		sprintf(new_date_details_msg, "%02d-%02d-20%02d", new_dom, new_month, new_year);
-		lcd_send_string("Nowa data:");
-		lcd_second_line();
-		lcd_send_string(new_date_details_msg);
-
-		HAL_Delay(3000);
-		lcd_clear();
-
-		time_and_date_set_flag = 0;
-		time_and_date_activated_flag = 0;
-		time_and_date_counter = 0;
+		to_do_on_alarm_off();
 	}
 
   }
@@ -298,7 +317,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	// Musimy sprawdzić czy przerwanie wywołał uart1, a nie coś innego
 	if(huart->Instance==USART2)
 	{
-		activate_time_and_date();
+		activate_time();
+		activate_date();
 		activate_alarm();
 
 		// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
