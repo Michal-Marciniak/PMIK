@@ -62,6 +62,8 @@ void Error_Handler(void);
 #define Blue_Button_Pin GPIO_PIN_13
 #define Blue_Button_GPIO_Port GPIOC
 #define Blue_Button_EXTI_IRQn EXTI15_10_IRQn
+#define WakeUp_PIN_Pin GPIO_PIN_0
+#define WakeUp_PIN_GPIO_Port GPIOA
 #define Green_LED_Pin GPIO_PIN_5
 #define Green_LED_GPIO_Port GPIOA
 #define Buzzer_Pin GPIO_PIN_9

@@ -52,9 +52,6 @@ void lcd_init()
 
 	/* wyczyszczenie wyświetlacza */
 	lcd_clear();
-
-	/* wyłączenie podświetlenia */
-	//lcd_back_light_off();
 }
 
 // Funkcja odpowiedzialna za aktualizowanie i wyświetlanie na bieżąco wszystkich danych na wyświetlaczu LCD
@@ -176,22 +173,23 @@ void lcd_send_string(const char * string)
 
 void lcd_send_alarm_on_msg(void) {
 
+	lcd_clear();
 	lcd_send_string("Wy");
 	lcd_send_own_char(3);
 	lcd_send_own_char(8);
 	lcd_send_string("cz alarm !!!");
-
-	HAL_Delay(5);
+	HAL_Delay(1000);
 }
 
 void lcd_send_alarm_off_msg(void) {
 
+	lcd_clear();
 	lcd_send_string("Alarm wy");
 	lcd_send_own_char(3);
 	lcd_send_own_char(8);
 	lcd_send_string("czony");
-
-	HAL_Delay(5);
+	HAL_Delay(2000);
+	lcd_clear();
 }
 
 // funkcja do zapisania w pamięci CG RAM, ośmiu zdefiniowanych przez nas znaków

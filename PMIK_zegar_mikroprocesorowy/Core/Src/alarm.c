@@ -45,16 +45,17 @@ uint8_t alarm_flag;
 char alarm_on_msg[20] = "Wylacz alarm!\n\r";
 char alarm_off_msg[20] = "Alarm wylaczony!\n\r";
 char alarm_set_msg[20] = "Alarm ustawiony!\n\r";
+
+uint8_t add_sec, add_mins, add_hours, add_days;
+uint8_t temp_sec, temp_mins, temp_hours, temp_days;
 /*	alarm	*/
 
 uint8_t uart_rx_data;
 
 void rtc_set_time ()
 {
-	  RTC_TimeTypeDef sTime;
-	  RTC_DateTypeDef sDate;
-	  /**Initialize RTC and set the Time and Date
-	  */
+	RTC_TimeTypeDef sTime;
+	RTC_DateTypeDef sDate;
 
 	get_Time();
 
@@ -187,12 +188,44 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 {
 	get_Time();
 
-	uint8_t alarm_day = time.dayofmonth + day;
-	uint8_t alarm_hour = time.hour + hour;
-	uint8_t alarm_min = time.minutes + min;
+	temp_sec = time.seconds + sec;
+	temp_mins = time.minutes + min;
+	temp_hours = time.hour + hour;
+	temp_days = time.dayofmonth + day;
+
+	if(temp_sec > 59) {
+
+		add_sec = temp_sec % 60;
+		add_mins = temp_sec / 60;
+
+		temp_sec = add_sec;
+		temp_mins += add_mins;
+
+		if(temp_mins > 59) {
+
+			add_mins = temp_mins % 60;
+			add_hours = temp_mins / 60;
+
+			temp_mins = add_mins;
+			temp_hours += add_hours;
+
+			if(temp_hours > 23) {
+
+				add_hours = temp_hours % 24;
+				add_days = temp_hours / 24;
+
+				temp_hours = add_hours;
+				temp_days += add_days;
+			}
+		}
+	}
+
+	uint8_t alarm_day = temp_days;
+	uint8_t alarm_hour = temp_hours;
+	uint8_t alarm_min = temp_mins;
 
 	// włączamy alarm 2 sekundy wcześniej niż zaplanowany, ponieważ transmisja uartem trwa 2s
-	uint8_t alarm_sec = time.seconds + sec - 2;
+	uint8_t alarm_sec = temp_sec - 2;
 
 	RTC_AlarmTypeDef sAlarm;
 
@@ -215,6 +248,7 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 	}
 
 	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_set_msg, strlen(alarm_set_msg));
+
   /* USER CODE BEGIN RTC_Init 5 */
 
   /* USER CODE END RTC_Init 5 */
@@ -312,26 +346,15 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 
 void to_do_on_alarm() {
 
-	lcd_clear();
-	//lcd_back_light_on();
-
 	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_SET);
 	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_on_msg, strlen(alarm_on_msg));
 	lcd_send_alarm_on_msg();
-
-	HAL_Delay(1000);
 }
 
 void to_do_on_alarm_off() {
 
-	lcd_clear();
-	//lcd_back_light_on();
-
 	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_off_msg, strlen(alarm_off_msg));
 	lcd_send_alarm_off_msg();
-	HAL_Delay(3000);
-
-	lcd_clear();
 }
 
 // Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku
