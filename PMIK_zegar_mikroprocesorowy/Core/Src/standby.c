@@ -5,11 +5,15 @@
  *      Author: michal
  */
 
+#include "main.h"
+#include "tim.h"
 #include "rtc.h"
+#include "usart.h"
+
 #include "lcd_i2c.h"
 #include "time.h"
 #include "alarm.h"
-#include "main.h"
+#include "keypad.h"
 
 
 // Struktura do przechowywania aktualnego czasu i daty, które będziemy odczytywać z modułu RTC DS3231
@@ -47,8 +51,15 @@ uint8_t add_sec, add_mins, add_hours, add_days;
 uint8_t temp_sec, temp_mins, temp_hours, temp_days;
 /*	alarm	*/
 
+/*	keypad	*/
+bool keypadSwitches[16] = {0};
+Keypad_Wires_TypeDef keypadStruct;
+/*	keypad	*/
+
 
 void to_do_after_wake_up_from_standby(void) {
+
+	lcd_back_light_on();
 
 	// wykonaj jeśli zaczął się alarm
 	if(alarm_flag) {
@@ -68,9 +79,9 @@ void to_do_after_wake_up_from_standby(void) {
 
 	  __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);	// wyszyszczenie flagi SBF, aby upewnić się że nie jesteśmy w trybie stanby
 
-	  for(int i=0; i<10; i++) {
+	  for(int i=0; i<15; i++) {
 		  HAL_GPIO_TogglePin(Green_LED_GPIO_Port, Green_LED_Pin);
-		  HAL_Delay(100);
+		  HAL_Delay(80);
 	  }
 
 	  if(!alarm_flag) {
@@ -80,7 +91,7 @@ void to_do_after_wake_up_from_standby(void) {
 		  lcd_second_line();
 		  lcd_set_cursor(1, 2);
 		  lcd_send_string("STANDBY MODE");
-		  HAL_Delay(1500);
+		  HAL_Delay(1000);
 		  lcd_clear();
 	  } else {
 		  to_do_on_alarm();
@@ -93,23 +104,61 @@ void to_do_after_wake_up_from_standby(void) {
 	  HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
 	}
 
+	// Keypad ports
+	keypadStruct.R1_Port = R1_GPIO_Port;
+	keypadStruct.R2_Port = R2_GPIO_Port;
+	keypadStruct.R3_Port = R3_GPIO_Port;
+	keypadStruct.R4_Port = R4_GPIO_Port;
+
+	keypadStruct.C1_Port = C1_GPIO_Port;
+	keypadStruct.C2_Port = C2_GPIO_Port;
+	keypadStruct.C3_Port = C3_GPIO_Port;
+	keypadStruct.C4_Port = C4_GPIO_Port;
+
+	// Keypad pins
+	keypadStruct.R1_pin = R1_Pin;
+	keypadStruct.R2_pin = R2_Pin;
+	keypadStruct.R3_pin = R3_Pin;
+	keypadStruct.R4_pin = R4_Pin;
+
+	keypadStruct.C1_pin = C1_Pin;
+	keypadStruct.C2_pin = C2_Pin;
+	keypadStruct.C3_pin = C3_Pin;
+	keypadStruct.C4_pin = C4_Pin;
+
+	keypad4x4_Init(&keypadStruct);
 }
 
 void to_do_before_going_to_standby(void) {
 
-	// wykonaj jeśli zaczął się alarm
-	if(alarm_flag) {
+	for(int i=0; i<300; i++) {
 
-		while (alarm_flag) {
-			to_do_on_alarm();
+		keypad4x4_ReadKeypad(keypadSwitches);
+
+		for(int j=0; j<16; j++) {
+
+			if(keypadSwitches[j]) {
+				lcd_clear();
+				HAL_Delay(5);
+				lcd_send_string("Przycisk: ");
+				lcd_send_string(keypad4x4_GetChar(j));
+				delay(1000);
+				lcd_clear();
+			}
+
 		}
 
-		to_do_on_alarm_off();
-	}
-
-	for(int i=0; i<30; i++) {
-
 		lcd_display_refresh();
+
+		// wykonaj jeśli zaczął się alarm
+		if(alarm_flag) {
+
+			while (alarm_flag) {
+				to_do_on_alarm();
+			}
+
+			to_do_on_alarm_off();
+		}
 
 		// wykonaj jeśli użytkownik ustawił nową godzinę
 		if(time_set_flag) {
@@ -125,7 +174,7 @@ void to_do_before_going_to_standby(void) {
 			new_month = time.month;
 			new_year = time.year;
 
-			if( (new_hour > 23 || new_hour < 0 || new_min > 59 || new_min < 1) && time_set_flag) {
+			if( (new_hour > 23 || new_hour < 0 || new_min > 59 || new_min < 0) && time_set_flag) {
 				lcd_clear();
 				lcd_set_cursor(0, 2);
 				lcd_send_string("B");
@@ -145,7 +194,7 @@ void to_do_before_going_to_standby(void) {
 				lcd_send_string("Ustawiony czas:");
 				lcd_second_line();
 				lcd_send_string(new_time_details_msg);
-				HAL_Delay(1000);
+				HAL_Delay(2000);
 				lcd_clear();
 
 				time_set_flag = 0;
@@ -187,7 +236,7 @@ void to_do_before_going_to_standby(void) {
 				lcd_send_string("Ustawiona data:");
 				lcd_second_line();
 				lcd_send_string(new_date_details_msg);
-				HAL_Delay(1000);
+				HAL_Delay(2000);
 				lcd_clear();
 
 				date_set_flag = 0;
@@ -229,7 +278,7 @@ void to_do_before_going_to_standby(void) {
 				lcd_send_string("Alarm na godz.:");
 				lcd_second_line();
 				lcd_send_string(alarm_details_msg);
-				HAL_Delay(1000);
+				HAL_Delay(2000);
 				lcd_clear();
 
 				alarm_set_flag = 0;
@@ -237,7 +286,7 @@ void to_do_before_going_to_standby(void) {
 
 		}
 
-		HAL_Delay(1000);
+		HAL_Delay(100);
 	}
 
 }
@@ -288,6 +337,8 @@ void go_to_standby(void) {
 	HAL_Delay(1000);
 	lcd_back_light_off();
 	lcd_clear();
+
+	HAL_NVIC_SetPriority(EXTI_LINE_22, 0, 0);	// Wybudzenie z trybu STANDBY ma najwyższy priorytet w układzie
 
 	// Finalnie wchodzimy w tryb STANDBY
 	HAL_PWR_EnterSTANDBYMode();

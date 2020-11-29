@@ -50,7 +50,10 @@ uint8_t add_sec, add_mins, add_hours, add_days;
 uint8_t temp_sec, temp_mins, temp_hours, temp_days;
 /*	alarm	*/
 
+/* UART */
 uint8_t uart_rx_data;
+/* UART */
+
 
 void rtc_set_time ()
 {
@@ -223,9 +226,7 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 	uint8_t alarm_day = temp_days;
 	uint8_t alarm_hour = temp_hours;
 	uint8_t alarm_min = temp_mins;
-
-	// włączamy alarm 2 sekundy wcześniej niż zaplanowany, ponieważ transmisja uartem trwa 2s
-	uint8_t alarm_sec = temp_sec - 2;
+	uint8_t alarm_sec = temp_sec;
 
 	RTC_AlarmTypeDef sAlarm;
 
@@ -233,7 +234,7 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
     */
 	sAlarm.AlarmTime.Hours = decToBcd(alarm_hour);
 	sAlarm.AlarmTime.Minutes = decToBcd(alarm_min);
-	sAlarm.AlarmTime.Seconds = decToBcd(alarm_sec);
+	sAlarm.AlarmTime.Seconds = decToBcd(alarm_sec - 2);
 	sAlarm.AlarmTime.SubSeconds = 0x0;
 	sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 	sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -247,7 +248,9 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 		Error_Handler();
 	}
 
-	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_set_msg, strlen(alarm_set_msg));
+	HAL_NVIC_SetPriority(EXTI_LINE_17, 0, 1);	// alarm A ma drugi najwyższy priorytet w układzie
+
+//	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_set_msg, strlen(alarm_set_msg));
 
   /* USER CODE BEGIN RTC_Init 5 */
 
@@ -257,7 +260,7 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 // Funkcja sygnalizująca, że użytkownik ustawia nową godzinę na zegarku
 void activate_time () {
 
-	if(uart_rx_data == 't') {
+	if(uart_rx_data == 't' || uart_rx_data == 'T') {
 
 		date_activated_flag = 0;
 		alarm_activated_flag = 0;
@@ -285,7 +288,7 @@ void activate_time () {
 // Funkcja sygnalizująca, że użytkownik ustawia nową datę na zegarku
 void activate_date () {
 
-	if(uart_rx_data == 'd') {
+	if(uart_rx_data == 'd' || uart_rx_data == 'D') {
 
 		time_activated_flag = 0;
 		alarm_activated_flag = 0;
@@ -313,7 +316,7 @@ void activate_date () {
 // Funkcja sygnalizująca, że użytkownik ustawia nowy alarm
 void activate_alarm () {
 
-	if(uart_rx_data == 'a') {
+	if(uart_rx_data == 'a' || uart_rx_data == 'A') {
 
 		time_activated_flag = 0;
 		date_activated_flag = 0;

@@ -12,9 +12,9 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "adc.h"
 #include "i2c.h"
 #include "rtc.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -47,11 +47,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
-/*	Uart received data	*/
-uint8_t uart_rx_data;
-/*	Uart received data	*/
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -62,7 +57,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint8_t uart_rx_data;
 /* USER CODE END 0 */
 
 /**
@@ -94,49 +89,50 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
-  MX_I2C2_Init();
   MX_RTC_Init();
   MX_USART2_UART_Init();
-  MX_ADC1_Init();
+  MX_I2C2_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
-  HAL_GPIO_WritePin(Green_LED_GPIO_Port, Green_LED_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(Green_LED_GPIO_Port, Green_LED_Pin, GPIO_PIN_RESET);
 
-  /****************** LCD BEGIN ******************/
-  lcd_init();
-  /****************** LCD END ******************/
+	/****************** LCD BEGIN ******************/
+	lcd_init();
+	/****************** LCD END ******************/
 
-  rtc_set_time();	// Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
+	//set_Time(0, 0, 10, 3, 25, 11, 20);
+	rtc_set_time();	// Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
 
-  /****************** UART BEGIN ******************/
-  // Funkcja odpowiedzialna za odbiór jednego znaku z uart2 w trybie przerwaniowym, i zapisanie go w zmiennej uart_rx_data.
-  // Po odebraniu znaku, nastąpi przerwanie które zostanie obsłużone przez funkcję callback HAL_UART_RxCpltCallback.
-  HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+	/****************** UART BEGIN ******************/
+	// Funkcja odpowiedzialna za odbiór jednego znaku z uart2 w trybie przerwaniowym, i zapisanie go w zmiennej uart_rx_data.
+	// Po odebraniu znaku, nastąpi przerwanie które zostanie obsłużone przez funkcję callback HAL_UART_RxCpltCallback.
+	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
 
-  // wystąpienie przerwania po ukończeniu transmisji danych (TC - Transmition Complete)
-  __HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
-  /****************** UART END ******************/
+	// wystąpienie przerwania po ukończeniu transmisji danych (TC - Transmition Complete)
+	__HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
+	/****************** UART END ******************/
+
+	/****************** TIMER BEGIN ******************/
+	HAL_TIM_Base_Start_IT(&htim1);
+	/****************** TIMER END ******************/
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
+	while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 
-	lcd_back_light_on();
+		to_do_after_wake_up_from_standby();
 
-	to_do_after_wake_up_from_standby();
+		to_do_before_going_to_standby();
 
-	to_do_before_going_to_standby();
-
-	go_to_standby();
-  }
-
+		go_to_standby();
+	}
   /* USER CODE END 3 */
 }
 
@@ -164,7 +160,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = 8;
-  RCC_OscInitStruct.PLL.PLLN = 64;
+  RCC_OscInitStruct.PLL.PLLN = 60;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = 4;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
@@ -176,11 +172,11 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV8;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
   {
     Error_Handler();
   }
@@ -197,9 +193,8 @@ void SystemClock_Config(void)
 // Funkcja odpowiedzialna za obsługę przerwania spowodowanego odebraniem danych na UART2
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
-	// Musimy sprawdzić czy przerwanie wywołał uart1, a nie coś innego
-	if(huart->Instance==USART2)
-	{
+	// Musimy sprawdzić czy przerwanie wywołał uart2, a nie coś innego
+	if (huart->Instance == USART2) {
 		activate_time();
 		activate_date();
 		activate_alarm();
@@ -219,7 +214,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
+	/* User can add his own implementation to report the HAL error return state */
 
   /* USER CODE END Error_Handler_Debug */
 }

@@ -47,7 +47,7 @@ all: PMIK_zegar_mikroprocesorowy.elf secondary-outputs
 
 # Tool invocations
 PMIK_zegar_mikroprocesorowy.elf: $(OBJS) $(USER_OBJS) C:\Users\micha\STM32CubeIDE\workspace_1.4.0\PMIK_zegar_mikroprocesorowy\STM32F401RETX_FLASH.ld
-	arm-none-eabi-gcc -o "PMIK_zegar_mikroprocesorowy.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\micha\STM32CubeIDE\workspace_1.4.0\PMIK_zegar_mikroprocesorowy\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PMIK_zegar_mikroprocesorowy.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "PMIK_zegar_mikroprocesorowy.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\micha\STM32CubeIDE\workspace_1.4.0\PMIK_zegar_mikroprocesorowy\STM32F401RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PMIK_zegar_mikroprocesorowy.map" -Wl,--gc-sections -static -u _printf_float -u _scanf_float --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

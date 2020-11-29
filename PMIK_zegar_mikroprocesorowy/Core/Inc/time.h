@@ -25,4 +25,6 @@ void set_Time (uint8_t sec, uint8_t min, uint8_t hour, uint8_t dow, uint8_t dom,
 
 void get_Time (void);
 
+void delay(uint16_t delay);
+
 #endif /* INC_TIME_H_ */

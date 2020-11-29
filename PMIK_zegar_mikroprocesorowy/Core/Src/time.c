@@ -7,6 +7,7 @@
 
 #include "stm32f4xx_hal.h"
 #include "i2c.h"
+#include "tim.h"
 
 #define DS3231_ADDRESS 0xD0
 
@@ -56,16 +57,29 @@ void set_Time (uint8_t sec, uint8_t min, uint8_t hour, uint8_t dow, uint8_t dom,
 
 void get_Time (void)
 {
-	uint8_t time_to_red[7];
+	uint8_t time_to_read[7];
 
-	HAL_I2C_Mem_Read(&hi2c2, DS3231_ADDRESS, 0x00, 1, time_to_red, 7, 1000);
+	HAL_I2C_Mem_Read(&hi2c2, DS3231_ADDRESS, 0x00, 1, time_to_read, 7, 1000);
 
-	time.seconds = bcdToDec(time_to_red[0]);
-	time.minutes = bcdToDec(time_to_red[1]);
-	time.hour = bcdToDec(time_to_red[2]);
-	time.dayofweek = bcdToDec(time_to_red[3]);
-	time.dayofmonth = bcdToDec(time_to_red[4]);
-	time.month = bcdToDec(time_to_red[5]);
-	time.year = bcdToDec(time_to_red[6]);
+	time.seconds = bcdToDec(time_to_read[0]);
+	time.minutes = bcdToDec(time_to_read[1]);
+	time.hour = bcdToDec(time_to_read[2]);
+	time.dayofweek = bcdToDec(time_to_read[3]);
+	time.dayofmonth = bcdToDec(time_to_read[4]);
+	time.month = bcdToDec(time_to_read[5]);
+	time.year = bcdToDec(time_to_read[6]);
 }
+
+void delay(uint16_t delay) {
+
+	__HAL_TIM_SET_COUNTER(&htim1, 0);
+	while (__HAL_TIM_GET_COUNTER(&htim1) < delay);
+}
+
+
+
+
+
+
+
 

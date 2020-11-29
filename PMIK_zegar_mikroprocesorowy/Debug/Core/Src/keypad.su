@@ -1,0 +1,5 @@
+keypad.c:36:6:keypad4x4_Init	24	static
+keypad.c:50:13:keypad4x4_FindPins_positions	16	static
+keypad.c:75:13:keypad4x4_ChangeColumn	16	static
+keypad.c:119:6:keypad4x4_ReadKeypad	16	static
+keypad.c:150:7:keypad4x4_GetChar	16	static
