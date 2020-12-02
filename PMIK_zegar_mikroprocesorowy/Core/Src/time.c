@@ -11,6 +11,9 @@
 
 #define DS3231_ADDRESS 0xD0
 
+uint8_t time_to_write[7];
+uint8_t time_to_read[7];
+
 // Funkcja konwertująca wartość dziesiętną na binarną,
 // ponieważ dane zapisywane do rejestrów DS3231 muszą być postaci binarnej
 uint8_t decToBcd(int val)
@@ -42,8 +45,6 @@ TIME time;
 // set_Time(sec, min, hour, dow, dom, month, year)
 void set_Time (uint8_t sec, uint8_t min, uint8_t hour, uint8_t dow, uint8_t dom, uint8_t month, uint8_t year)
 {
-	uint8_t time_to_write[7];
-
 	time_to_write[0] = decToBcd(sec);
 	time_to_write[1] = decToBcd(min);
 	time_to_write[2] = decToBcd(hour);
@@ -57,8 +58,6 @@ void set_Time (uint8_t sec, uint8_t min, uint8_t hour, uint8_t dow, uint8_t dom,
 
 void get_Time (void)
 {
-	uint8_t time_to_read[7];
-
 	HAL_I2C_Mem_Read(&hi2c2, DS3231_ADDRESS, 0x00, 1, time_to_read, 7, 1000);
 
 	time.seconds = bcdToDec(time_to_read[0]);

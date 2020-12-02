@@ -35,11 +35,14 @@ uint8_t global_buffer[5];		// globalny bufor przechowujący nowy czas, datę i a
 /*	time	*/
 uint8_t time_activated_flag;	// flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy czas
 uint8_t time_set_flag;			// flaga sygnalizująca, że nowy czas został pomyślnie ustawiony
+uint8_t new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year;
+char new_time_details_msg[12];
 /*	time	*/
 
 /*	date	*/
 uint8_t date_activated_flag;	// flaga sygnalizująca, że w tym momencie użytkownik ustawia nową date
 uint8_t date_set_flag;			// flaga sygnalizująca, że nowa data została pomyślnie ustawiona
+char new_date_details_msg[12];
 /*	date	*/
 
 /*	alarm	*/
@@ -47,8 +50,7 @@ uint8_t alarm_activated_flag;	// flaga sygnalizująca, że w tym momencie użytk
 uint8_t alarm_set_flag; 		// flaga sygnalizująca, że alarm został pomyślnie ustawiony
 uint8_t alarm_flag; 			// flaga sygnalizująca włączenie się alarmu
 
-uint8_t add_sec, add_mins, add_hours, add_days;
-uint8_t temp_sec, temp_mins, temp_hours, temp_days;
+uint8_t days_to_alarm, alarm_hour, alarm_min, alarm_sec;
 /*	alarm	*/
 
 /*	keypad	*/
@@ -81,7 +83,7 @@ void to_do_after_wake_up_from_standby(void) {
 
 	  for(int i=0; i<15; i++) {
 		  HAL_GPIO_TogglePin(Green_LED_GPIO_Port, Green_LED_Pin);
-		  HAL_Delay(80);
+		  delay(80);
 	  }
 
 	  if(!alarm_flag) {
@@ -91,9 +93,10 @@ void to_do_after_wake_up_from_standby(void) {
 		  lcd_second_line();
 		  lcd_set_cursor(1, 2);
 		  lcd_send_string("STANDBY MODE");
-		  HAL_Delay(1000);
+		  delay(1000);
 		  lcd_clear();
-	  } else {
+	  }
+	  else {
 		  to_do_on_alarm();
 	  }
 
@@ -131,7 +134,17 @@ void to_do_after_wake_up_from_standby(void) {
 
 void to_do_before_going_to_standby(void) {
 
-	for(int i=0; i<300; i++) {
+	for(int i=0; i<3000; i++) {
+
+		// wykonaj jeśli zaczął się alarm
+		if(alarm_flag) {
+
+			while (alarm_flag) {
+				to_do_on_alarm();
+			}
+
+			to_do_on_alarm_off();
+		}
 
 		keypad4x4_ReadKeypad(keypadSwitches);
 
@@ -150,38 +163,28 @@ void to_do_before_going_to_standby(void) {
 
 		lcd_display_refresh();
 
-		// wykonaj jeśli zaczął się alarm
-		if(alarm_flag) {
-
-			while (alarm_flag) {
-				to_do_on_alarm();
-			}
-
-			to_do_on_alarm_off();
-		}
-
 		// wykonaj jeśli użytkownik ustawił nową godzinę
 		if(time_set_flag) {
 
-			uint8_t new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year;
-			char new_time_details_msg[12];
-
 			new_sec = time.seconds;
-			new_min = global_buffer[2];
 			new_hour = global_buffer[1];
+			new_min = global_buffer[2];
 			new_dow = time.dayofweek;
 			new_dom = time.dayofmonth;
 			new_month = time.month;
 			new_year = time.year;
 
-			if( (new_hour > 23 || new_hour < 0 || new_min > 59 || new_min < 0) && time_set_flag) {
+			if( (new_hour > 23 || new_hour < 0 || new_min > 59 || new_min < 1) && time_set_flag) {
+
 				lcd_clear();
-				lcd_set_cursor(0, 2);
-				lcd_send_string("B");
+				lcd_set_cursor(0, 1);
+				lcd_send_string("Nieprawid");
 				lcd_send_own_char(3);
-				lcd_send_own_char(2);
-				lcd_send_string("dny czas!");
-				HAL_Delay(1000);
+				lcd_send_string("owy");
+				lcd_second_line();
+				lcd_set_cursor(1, 6);
+				lcd_send_string("czas!");
+				delay(1000);
 				lcd_clear();
 
 				time_set_flag = 0;
@@ -194,7 +197,7 @@ void to_do_before_going_to_standby(void) {
 				lcd_send_string("Ustawiony czas:");
 				lcd_second_line();
 				lcd_send_string(new_time_details_msg);
-				HAL_Delay(2000);
+				delay(1000);
 				lcd_clear();
 
 				time_set_flag = 0;
@@ -205,25 +208,27 @@ void to_do_before_going_to_standby(void) {
 		// wykonaj jeśli użytkownik ustawił nową datę
 		if(date_set_flag) {
 
-			uint8_t new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year;
-			char new_date_details_msg[12];
-
 			new_sec = time.seconds;
 			new_min = time.minutes;
 			new_hour = time.hour;
+
 			new_dow = global_buffer[1];
 			new_dom = global_buffer[2];
 			new_month = global_buffer[3];
 			new_year = global_buffer[4];
 
-			if( (new_dow > 7 || new_dow < 1 || new_dom > 31 || new_dom < 1 || new_month > 12 || new_month < 1) && date_set_flag) {
+
+			if( (new_dow > 7 || new_dow < 1 || new_dom > 31 || new_dom < 1 || new_month > 12 || new_month < 1 || new_year < 20) && date_set_flag) {
+
 				lcd_clear();
-				lcd_set_cursor(0, 2);
-				lcd_send_string("B");
+				lcd_set_cursor(0, 1);
+				lcd_send_string("Nieprawid");
 				lcd_send_own_char(3);
-				lcd_send_own_char(2);
-				lcd_send_string("dna data!");
-				HAL_Delay(1000);
+				lcd_send_string("owa");
+				lcd_second_line();
+				lcd_set_cursor(1, 6);
+				lcd_send_string("data!");
+				delay(1000);
 				lcd_clear();
 
 				date_set_flag = 0;
@@ -236,7 +241,7 @@ void to_do_before_going_to_standby(void) {
 				lcd_send_string("Ustawiona data:");
 				lcd_second_line();
 				lcd_send_string(new_date_details_msg);
-				HAL_Delay(2000);
+				delay(1000);
 				lcd_clear();
 
 				date_set_flag = 0;
@@ -247,46 +252,16 @@ void to_do_before_going_to_standby(void) {
 		// wykonaj jeśli użytkownik ustawił nowy czas alarmu
 		if(alarm_set_flag) {
 
-			uint8_t days_to_alarm, hours_to_alarm, minutes_to_alarm, seconds_to_alarm;
-			char alarm_details_msg[9];
+			days_to_alarm = global_buffer[1];	// dni to drugi element, ponieważ pierwszy to literka a, mówiąca o tym, że ustawiamy alarm.
+			alarm_hour = global_buffer[2];
+			alarm_min = global_buffer[3];
+			alarm_sec = global_buffer[4];
 
-			days_to_alarm = global_buffer[1];	// dni to drugi element, ponieważ pierwszy to literka a
-												// mówiąca o tym, że ustawiamy alarm.
-			hours_to_alarm = global_buffer[2];
-			minutes_to_alarm = global_buffer[3];
-			seconds_to_alarm = global_buffer[4];
-
-			if( (days_to_alarm < 0 || hours_to_alarm < 0 || minutes_to_alarm < 0 || seconds_to_alarm < 0) && alarm_set_flag) {
-				lcd_clear();
-				lcd_set_cursor(0, 4);
-				lcd_send_string("B");
-				lcd_send_own_char(3);
-				lcd_send_own_char(2);
-				lcd_send_string("dny czas");
-				lcd_second_line();
-				lcd_send_string("alarmu!");
-				HAL_Delay(1000);
-				lcd_clear();
-
-				alarm_set_flag = 0;
-			}
-			else {
-				rtc_set_alarm(days_to_alarm, hours_to_alarm, minutes_to_alarm, seconds_to_alarm);
-
-				lcd_clear();
-				sprintf(alarm_details_msg, "%02d:%02d:%02d", temp_hours, temp_mins, temp_sec);
-				lcd_send_string("Alarm na godz.:");
-				lcd_second_line();
-				lcd_send_string(alarm_details_msg);
-				HAL_Delay(2000);
-				lcd_clear();
-
-				alarm_set_flag = 0;
-			}
-
+			rtc_set_alarm(days_to_alarm, alarm_hour, alarm_min, alarm_sec);
+			alarm_set_flag = 0;
 		}
 
-		HAL_Delay(100);
+		delay(10);		// 10 ms
 	}
 
 }
@@ -314,7 +289,7 @@ void go_to_standby(void) {
 	lcd_send_string("Entering to");
 	lcd_second_line();
 	lcd_send_string("STANDBY MODE...");
-	HAL_Delay(1000);
+	delay(1000);
 	lcd_clear();
 
 	// Przed wejściem w tryb STANDBY, musimy włączyć pin Wake up, aby mógł nas potem wybudzić z tego stanu
@@ -334,7 +309,7 @@ void go_to_standby(void) {
 	lcd_second_line();
 	lcd_set_cursor(1, 7);
 	lcd_send_string("ON");
-	HAL_Delay(1000);
+	delay(1000);
 	lcd_back_light_off();
 	lcd_clear();
 

@@ -39,9 +39,9 @@ typedef struct
 
 void keypad4x4_Init(Keypad_Wires_TypeDef  *KeypadWiringStruct);
 
-static void keypad4x4_FindPins_positions(void);
+void keypad4x4_FindPins_positions(void);
 
-static void keypad4x4_ChangeColumn(uint8_t colNum_0_to_3);
+void keypad4x4_ChangeColumn(uint8_t colNum_0_to_3);
 // Funkcja odpowiedzialna za odczytanie aktualnie wciśniętego przycisku
 void keypad4x4_ReadKeypad(bool keys[16]);
 

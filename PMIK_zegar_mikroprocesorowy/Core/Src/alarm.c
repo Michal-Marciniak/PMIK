@@ -24,30 +24,36 @@ typedef struct {
 
 TIME time;
 
+RTC_TimeTypeDef sTime;
+RTC_DateTypeDef sDate;
+
 uint8_t global_counter = 0;
 uint8_t global_buffer[5];
 
 /*	time	*/
 uint8_t time_activated_flag;
 uint8_t time_set_flag;
+uint8_t hour, min, sec;
 /*	time	*/
 
 /*	date	*/
 uint8_t date_activated_flag;
 uint8_t date_set_flag;
+uint8_t day, year;
 /*	date	*/
 
 /*	alarm	*/
+RTC_AlarmTypeDef sAlarm;
+uint8_t alarm_day, alarm_hour, alarm_min, alarm_sec;
+
 uint8_t alarm_activated_flag;
 uint8_t alarm_set_flag;
 uint8_t alarm_flag;
 
 char alarm_on_msg[20] = "Wylacz alarm!\n\r";
 char alarm_off_msg[20] = "Alarm wylaczony!\n\r";
-char alarm_set_msg[20] = "Alarm ustawiony!\n\r";
 
-uint8_t add_sec, add_mins, add_hours, add_days;
-uint8_t temp_sec, temp_mins, temp_hours, temp_days;
+char alarm_details_msg[9];
 /*	alarm	*/
 
 /* UART */
@@ -57,17 +63,14 @@ uint8_t uart_rx_data;
 
 void rtc_set_time ()
 {
-	RTC_TimeTypeDef sTime;
-	RTC_DateTypeDef sDate;
-
 	get_Time();
 
-	uint8_t hour = time.hour;
-	uint8_t min = time.minutes;
-	uint8_t sec = time.seconds;
+	hour = time.hour;
+	min = time.minutes;
+	sec = time.seconds;
 
-	uint8_t day = time.dayofmonth;
-	uint8_t year = time.year;
+	day = time.dayofmonth;
+	year = time.year;
 
 	// czas w RTC będzie taki sam jak w naszym DS3231
 	sTime.Hours = decToBcd(hour);
@@ -186,71 +189,164 @@ void rtc_set_time ()
 }
 
 // Funkcja odpowiedzialna za ustawienie alarmu o danej godzinie, i w danym dniu.
-// Jako parametry przyjmuje ilość godzin, minut, sekund oraz dni, pozostałych do włączenia alarmu
+// Jako parametry przyjmuje ilość dni do alarmu, godzinę, minutę oraz sekundę alarmu
 void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 {
 	get_Time();
 
-	temp_sec = time.seconds + sec;
-	temp_mins = time.minutes + min;
-	temp_hours = time.hour + hour;
-	temp_days = time.dayofmonth + day;
+	if( (day >= 0) && (hour >= 0) && (hour < 24) && (min > 0) && (min < 60) && (sec >= 0) && (sec < 60) ) {
 
-	if(temp_sec > 59) {
+		if(hour > time.hour) {
 
-		add_sec = temp_sec % 60;
-		add_mins = temp_sec / 60;
+			alarm_day = (time.dayofmonth + day) % 31;
+			alarm_hour = hour;
+			alarm_min = min;
+			alarm_sec = sec;
 
-		temp_sec = add_sec;
-		temp_mins += add_mins;
+			/**Enable the Alarm A*/
+			sAlarm.AlarmTime.Hours = decToBcd(alarm_hour);
+			sAlarm.AlarmTime.Minutes = decToBcd(alarm_min);
+			sAlarm.AlarmTime.Seconds = decToBcd(alarm_sec);
+			sAlarm.AlarmTime.SubSeconds = 0x0;
+			sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+			sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
+			sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
+			sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+			sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
+			sAlarm.AlarmDateWeekDay = decToBcd(alarm_day);
+			sAlarm.Alarm = RTC_ALARM_A;
+			if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
+			{
+				Error_Handler();
+			}
 
-		if(temp_mins > 59) {
+			HAL_NVIC_SetPriority(EXTI_LINE_17, 0, 1);	// alarm A ma drugi najwyższy priorytet w układzie
 
-			add_mins = temp_mins % 60;
-			add_hours = temp_mins / 60;
+			lcd_clear();
+			sprintf(alarm_details_msg, "%02d:%02d:%02d", hour, min, sec);
+			lcd_send_string("Alarm na godz.:");
+			lcd_second_line();
+			lcd_send_string(alarm_details_msg);
+			delay(1000);
+			lcd_clear();
 
-			temp_mins = add_mins;
-			temp_hours += add_hours;
+		}
+		else if ( (hour == time.hour) ) {
 
-			if(temp_hours > 23) {
+			if( (min > time.minutes) ) {
 
-				add_hours = temp_hours % 24;
-				add_days = temp_hours / 24;
+				alarm_day = time.dayofmonth + (day % 7);
+				alarm_hour = hour;
+				alarm_min = min;
+				alarm_sec = sec;
 
-				temp_hours = add_hours;
-				temp_days += add_days;
+				/**Enable the Alarm A*/
+				sAlarm.AlarmTime.Hours = decToBcd(alarm_hour);
+				sAlarm.AlarmTime.Minutes = decToBcd(alarm_min);
+				sAlarm.AlarmTime.Seconds = decToBcd(alarm_sec - 2);
+				sAlarm.AlarmTime.SubSeconds = 0x0;
+				sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+				sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
+				sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
+				sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+				sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
+				sAlarm.AlarmDateWeekDay = decToBcd(alarm_day);
+				sAlarm.Alarm = RTC_ALARM_A;
+				if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
+				{
+					Error_Handler();
+				}
+
+				HAL_NVIC_SetPriority(EXTI_LINE_17, 0, 1);	// alarm A ma drugi najwyższy priorytet w układzie
+
+				lcd_clear();
+				sprintf(alarm_details_msg, "%02d:%02d:%02d", hour, min, sec);
+				lcd_send_string("Alarm na godz.:");
+				lcd_second_line();
+				lcd_send_string(alarm_details_msg);
+				delay(1000);
+				lcd_clear();
+			}
+			else if ( (min == time.minutes) ) {
+
+				if( (sec > time.seconds) ) {
+
+					alarm_day = time.dayofmonth + (day % 7);
+					alarm_hour = hour;
+					alarm_min = min;
+					alarm_sec = sec;
+
+					/**Enable the Alarm A*/
+					sAlarm.AlarmTime.Hours = decToBcd(alarm_hour);
+					sAlarm.AlarmTime.Minutes = decToBcd(alarm_min);
+					sAlarm.AlarmTime.Seconds = decToBcd(alarm_sec - 2);
+					sAlarm.AlarmTime.SubSeconds = 0x0;
+					sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+					sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
+					sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
+					sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
+					sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
+					sAlarm.AlarmDateWeekDay = decToBcd(alarm_day);
+					sAlarm.Alarm = RTC_ALARM_A;
+					if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
+					{
+						Error_Handler();
+					}
+
+					HAL_NVIC_SetPriority(EXTI_LINE_17, 0, 1);	// alarm A ma drugi najwyższy priorytet w układzie
+
+					lcd_clear();
+					sprintf(alarm_details_msg, "%02d:%02d:%02d", hour, min, sec);
+					lcd_send_string("Alarm na godz.:");
+					lcd_second_line();
+					lcd_send_string(alarm_details_msg);
+					delay(1000);
+					lcd_clear();
+				}
+				else {
+					lcd_clear();
+					lcd_set_cursor(0, 1);
+					lcd_send_string("Nieprawid");
+					lcd_send_own_char(3);
+					lcd_send_string("owy");
+					lcd_second_line();
+					lcd_set_cursor(1, 2);
+					lcd_send_string("czas alarmu!");
+					delay(1000);
+					lcd_clear();
+				}
+
+			}
+			else {
+
 			}
 		}
+		else {
+			lcd_clear();
+			lcd_set_cursor(0, 1);
+			lcd_send_string("Nieprawid");
+			lcd_send_own_char(3);
+			lcd_send_string("owy");
+			lcd_second_line();
+			lcd_set_cursor(1, 2);
+			lcd_send_string("czas alarmu!");
+			delay(1000);
+			lcd_clear();
+		}
+
+	} else {
+		lcd_clear();
+		lcd_set_cursor(0, 1);
+		lcd_send_string("Nieprawid");
+		lcd_send_own_char(3);
+		lcd_send_string("owy");
+		lcd_second_line();
+		lcd_set_cursor(1, 2);
+		lcd_send_string("czas alarmu!");
+		delay(1000);
+		lcd_clear();
 	}
 
-	uint8_t alarm_day = temp_days;
-	uint8_t alarm_hour = temp_hours;
-	uint8_t alarm_min = temp_mins;
-	uint8_t alarm_sec = temp_sec;
-
-	RTC_AlarmTypeDef sAlarm;
-
-    /**Enable the Alarm A
-    */
-	sAlarm.AlarmTime.Hours = decToBcd(alarm_hour);
-	sAlarm.AlarmTime.Minutes = decToBcd(alarm_min);
-	sAlarm.AlarmTime.Seconds = decToBcd(alarm_sec - 2);
-	sAlarm.AlarmTime.SubSeconds = 0x0;
-	sAlarm.AlarmTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-	sAlarm.AlarmTime.StoreOperation = RTC_STOREOPERATION_RESET;
-	sAlarm.AlarmMask = RTC_ALARMMASK_NONE;
-	sAlarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_ALL;
-	sAlarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
-	sAlarm.AlarmDateWeekDay = decToBcd(alarm_day);
-	sAlarm.Alarm = RTC_ALARM_A;
-	if (HAL_RTC_SetAlarm_IT(&hrtc, &sAlarm, RTC_FORMAT_BCD) != HAL_OK)
-	{
-		Error_Handler();
-	}
-
-	HAL_NVIC_SetPriority(EXTI_LINE_17, 0, 1);	// alarm A ma drugi najwyższy priorytet w układzie
-
-//	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_set_msg, strlen(alarm_set_msg));
 
   /* USER CODE BEGIN RTC_Init 5 */
 
@@ -350,13 +446,13 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 void to_do_on_alarm() {
 
 	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_SET);
-	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_on_msg, strlen(alarm_on_msg));
+	//HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_on_msg, strlen(alarm_on_msg));
 	lcd_send_alarm_on_msg();
 }
 
 void to_do_on_alarm_off() {
 
-	HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_off_msg, strlen(alarm_off_msg));
+	//HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_off_msg, strlen(alarm_off_msg));
 	lcd_send_alarm_off_msg();
 }
 

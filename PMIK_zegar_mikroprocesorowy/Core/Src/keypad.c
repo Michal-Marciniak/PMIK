@@ -13,6 +13,8 @@ static Keypad_Wires_TypeDef KeypadStruct;
 // tablica, przechowująca numery pinów danych kolumn
 static uint8_t ColumnsPositions[4];
 
+uint8_t idx;
+
 static char *keypad_keys[16] =
 {
 	"1",
@@ -47,9 +49,10 @@ void keypad4x4_Init(Keypad_Wires_TypeDef  *KeypadWiringStruct)
 	HAL_GPIO_WritePin(KeypadStruct.C4_Port, KeypadStruct.C4_pin, GPIO_PIN_SET);
 }
 
-static void keypad4x4_FindPins_positions(void)
+void keypad4x4_FindPins_positions(void)
 {
-	uint8_t idx=0;
+	idx=0;
+
 	for(idx=0; idx<16; idx++)
 	{
 		if(((KeypadStruct.C1_pin >> idx) & 0x0001) == 0x0001)
@@ -71,8 +74,7 @@ static void keypad4x4_FindPins_positions(void)
 	}
 }
 
-//Function(3): Change colomn number
-static void keypad4x4_ChangeColumn(uint8_t col_num)
+void keypad4x4_ChangeColumn(uint8_t col_num)
 {
 	if(col_num == 1)
 	{

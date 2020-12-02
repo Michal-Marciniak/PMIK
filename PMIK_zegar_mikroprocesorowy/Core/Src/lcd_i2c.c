@@ -12,7 +12,17 @@
 uint8_t BL;		// Back light
 uint8_t uart_flag;
 
+uint8_t col_number;
 uint8_t battery_level;
+
+uint8_t addr = LCD_ADDRESS;
+uint8_t tx_data[4];
+
+uint8_t addr;
+uint8_t tx_data[4];
+uint8_t RS = 0x01;
+
+uint8_t i, j;
 
 // tablica przechowująca czas i datę, wyświetlane na LCD
 char time_date_buffer[12];
@@ -95,7 +105,6 @@ void lcd_back_light_off(void) {
 // ustawienie kursora w danym wierszu i kolumnie
 void lcd_set_cursor(uint8_t row, uint8_t col) {
 
-	uint8_t col_number;
 	col_number = (col) & 0x0F;
 
 	switch(row) {
@@ -129,8 +138,7 @@ void lcd_second_line(void) {
 // wysłanie instrukcji do wyświetlacza
 void lcd_write_command(uint8_t data)
 {
-	uint8_t addr = LCD_ADDRESS;
-	uint8_t tx_data[4];
+	addr = LCD_ADDRESS;
 
 	tx_data[0] = (data & 0xF0) | EN_PIN | BL;		// EN = 1, RS = 0
 	tx_data[1] = (data & 0xF0) | BL;		// EN = 0, RS = 0  zatrzaśnięcie danych w wyświetlaczu
@@ -146,9 +154,8 @@ void lcd_write_command(uint8_t data)
 // wysłanie danych do wyświetlacza
 void lcd_write_data(uint8_t data)
 {
-	uint8_t addr = LCD_ADDRESS;
-	uint8_t tx_data[4];
-	uint8_t RS = 0x01;
+	addr = LCD_ADDRESS;
+	RS = 0x01;
 
 	tx_data[0] = (data & 0xF0) | EN_PIN | RS | BL;		// EN = 1, RS = 1
 	tx_data[1] = (data & 0xF0) | RS | BL;		// EN = 0, RS = 1  zatrzaśnięcie danych w wyświetlaczu
@@ -178,7 +185,7 @@ void lcd_send_alarm_on_msg(void) {
 	lcd_send_own_char(3);
 	lcd_send_own_char(8);
 	lcd_send_string("cz alarm !!!");
-	HAL_Delay(1000);
+	delay(1000);
 }
 
 void lcd_send_alarm_off_msg(void) {
@@ -188,14 +195,12 @@ void lcd_send_alarm_off_msg(void) {
 	lcd_send_own_char(3);
 	lcd_send_own_char(8);
 	lcd_send_string("czony");
-	HAL_Delay(2000);
+	delay(1000);
 	lcd_clear();
 }
 
 // funkcja do zapisania w pamięci CG RAM, ośmiu zdefiniowanych przez nas znaków
 void lcd_generate_own_chars(void) {
-
-	uint8_t i, j;
 
 	lcd_write_command(CG_RAM_ADDRESS);	// Przechodzimy na początek pamięci CG RAM
 

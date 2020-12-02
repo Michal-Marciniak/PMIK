@@ -102,7 +102,7 @@ int main(void)
 	lcd_init();
 	/****************** LCD END ******************/
 
-	//set_Time(0, 0, 10, 3, 25, 11, 20);
+	//set_Time(10, 59, 15, 7, 29, 11, 20);
 	rtc_set_time();	// Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
 
 	/****************** UART BEGIN ******************/
