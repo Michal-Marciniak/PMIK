@@ -1,1 +1,1 @@
-bluetooth.c:11:6:setup_uart	16	static
+bluetooth.c:11:5:hexToDec	32	static

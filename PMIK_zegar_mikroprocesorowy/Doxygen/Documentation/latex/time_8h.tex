@@ -1,0 +1,101 @@
+\hypertarget{time_8h}{}\doxysection{time.\+h File Reference}
+\label{time_8h}\index{time.h@{time.h}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{time_8h_acc57e5029bb69cc3bf5c6ec5a112ca00}{dec\+To\+Bcd}} (int val)
+\begin{DoxyCompactList}\small\item\em Funkcja konwertująca wartość dziesiętną na binarną, ponieważ dane zapisywane do rejestrów DS3231 muszą być postaci binarnej. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{time_8h_ac7903a8f3be6b7516c12cdc392b6a86c}{bcd\+To\+Dec}} (uint8\+\_\+t val)
+\begin{DoxyCompactList}\small\item\em Funkcja konwertująca wartość binarną na dziesiętną, ponieważ dane odczytywane z DS3231 są postaci binarnej, a dane wyświetlane na LCD będą postaci dziesiętnej. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{time_8h_af804871c0d59d97cab9d2d0e4dc5b16c}{set\+\_\+\+Time}} (uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ad1696900026b287a87c563b733a21bc3}{sec}}, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ac9b481208b43f7c37ed25e446bdec692}{min}}, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ae5af4ff48939d13d480f87e56a9385d6}{hour}}, uint8\+\_\+t dow, uint8\+\_\+t dom, uint8\+\_\+t month, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a7af2065789bc84419b8d5fe109be83b5}{year}})
+\begin{DoxyCompactList}\small\item\em Funkcja ustawiająca nową datę i godzinę zegara RTC. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{time_8h_ade4792bbde3ea5fdf5116a76b4f9fac3}{get\+\_\+\+Time}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja sczytująca datę i godzinę z modułu DS3231. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{time_8h_a42071dc0f568b5e965502014a4d215c3}{delay}} (uint16\+\_\+t delay)
+\begin{DoxyCompactList}\small\item\em Funkcja zatrzymująca działanie programu, na określony przez użytkownika czas. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{time_8h_ac7903a8f3be6b7516c12cdc392b6a86c}\label{time_8h_ac7903a8f3be6b7516c12cdc392b6a86c}} 
+\index{time.h@{time.h}!bcdToDec@{bcdToDec}}
+\index{bcdToDec@{bcdToDec}!time.h@{time.h}}
+\doxysubsubsection{\texorpdfstring{bcdToDec()}{bcdToDec()}}
+{\footnotesize\ttfamily int bcd\+To\+Dec (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{val }\end{DoxyParamCaption})}
+
+
+
+Funkcja konwertująca wartość binarną na dziesiętną, ponieważ dane odczytywane z DS3231 są postaci binarnej, a dane wyświetlane na LCD będą postaci dziesiętnej. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & Wartość binarna\\
+\hline
+\end{DoxyParams}
+Funkcja konwertująca wartość binarną na dziesiętną, ponieważ dane odczytywane z DS3231 są postaci binarnej, a dane wyświetlane na LCD będą postaci dziesiętnej. \mbox{\Hypertarget{time_8h_acc57e5029bb69cc3bf5c6ec5a112ca00}\label{time_8h_acc57e5029bb69cc3bf5c6ec5a112ca00}} 
+\index{time.h@{time.h}!decToBcd@{decToBcd}}
+\index{decToBcd@{decToBcd}!time.h@{time.h}}
+\doxysubsubsection{\texorpdfstring{decToBcd()}{decToBcd()}}
+{\footnotesize\ttfamily uint8\+\_\+t dec\+To\+Bcd (\begin{DoxyParamCaption}\item[{int}]{val }\end{DoxyParamCaption})}
+
+
+
+Funkcja konwertująca wartość dziesiętną na binarną, ponieważ dane zapisywane do rejestrów DS3231 muszą być postaci binarnej. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em val} & Wartość dziesiętna \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{time_8h_a42071dc0f568b5e965502014a4d215c3}\label{time_8h_a42071dc0f568b5e965502014a4d215c3}} 
+\index{time.h@{time.h}!delay@{delay}}
+\index{delay@{delay}!time.h@{time.h}}
+\doxysubsubsection{\texorpdfstring{delay()}{delay()}}
+{\footnotesize\ttfamily void delay (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{delay }\end{DoxyParamCaption})}
+
+
+
+Funkcja zatrzymująca działanie programu, na określony przez użytkownika czas. 
+
+W porównaniu do systemowej funkcji HAL\+\_\+\+Delay(), funkcja ta obsługuje system przerwań 
+\begin{DoxyParams}{Parameters}
+{\em delay} & Liczba milisekund \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{time_8h_ade4792bbde3ea5fdf5116a76b4f9fac3}\label{time_8h_ade4792bbde3ea5fdf5116a76b4f9fac3}} 
+\index{time.h@{time.h}!get\_Time@{get\_Time}}
+\index{get\_Time@{get\_Time}!time.h@{time.h}}
+\doxysubsubsection{\texorpdfstring{get\_Time()}{get\_Time()}}
+{\footnotesize\ttfamily void get\+\_\+\+Time (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja sczytująca datę i godzinę z modułu DS3231. 
+
+\mbox{\Hypertarget{time_8h_af804871c0d59d97cab9d2d0e4dc5b16c}\label{time_8h_af804871c0d59d97cab9d2d0e4dc5b16c}} 
+\index{time.h@{time.h}!set\_Time@{set\_Time}}
+\index{set\_Time@{set\_Time}!time.h@{time.h}}
+\doxysubsubsection{\texorpdfstring{set\_Time()}{set\_Time()}}
+{\footnotesize\ttfamily void set\+\_\+\+Time (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{sec,  }\item[{uint8\+\_\+t}]{min,  }\item[{uint8\+\_\+t}]{hour,  }\item[{uint8\+\_\+t}]{dow,  }\item[{uint8\+\_\+t}]{dom,  }\item[{uint8\+\_\+t}]{month,  }\item[{uint8\+\_\+t}]{year }\end{DoxyParamCaption})}
+
+
+
+Funkcja ustawiająca nową datę i godzinę zegara RTC. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sec} & Sekunda \\
+\hline
+{\em min} & Minuta \\
+\hline
+{\em hour} & Godzina \\
+\hline
+{\em dow} & Numer dnia tygodnia (1-\/pon. 2-\/wt. ...) \\
+\hline
+{\em dom} & Numer dnia miesiąca (1, 30, 22 ...) \\
+\hline
+{\em month} & Numer miesiąca (1-\/styczeń, 2-\/luty, ...) \\
+\hline
+{\em year} & Rok (18, 19, 20 ...)\\
+\hline
+\end{DoxyParams}
+Funkcja ustawiająca nową datę i godzinę zegara RTC. 

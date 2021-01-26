@@ -15,8 +15,7 @@
 #include "alarm.h"
 #include "keypad.h"
 
-
-// Struktura do przechowywania aktualnego czasu i daty, które będziemy odczytywać z modułu RTC DS3231
+/** Struktura do przechowywania aktualnego czasu i daty, które będziemy odczytywać z modułu RTC DS3231 */
 typedef struct {
 	uint8_t seconds;
 	uint8_t minutes;
@@ -29,26 +28,26 @@ typedef struct {
 
 TIME time;
 
-uint8_t global_counter;			// globalny licznik, służący do ustawiania nowego czasu, daty i alarmu ustawionych przez użytkownika
-uint8_t global_buffer[5];		// globalny bufor przechowujący nowy czas, datę i alarm ustawione przez użytkownika
+uint8_t global_counter;			/** globalny licznik, służący do ustawiania nowego czasu, daty i alarmu ustawionych przez użytkownika	*/
+uint8_t global_buffer[5];		/** globalny bufor przechowujący nowy czas, datę i alarm ustawione przez użytkownika	*/
 
 /*	time	*/
-uint8_t time_activated_flag;	// flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy czas
-uint8_t time_set_flag;			// flaga sygnalizująca, że nowy czas został pomyślnie ustawiony
+uint8_t time_activated_flag;	/** flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy czas	*/
+uint8_t time_set_flag;			/** flaga sygnalizująca, że nowy czas został pomyślnie ustawiony		*/
 uint8_t new_sec, new_min, new_hour, new_dow, new_dom, new_month, new_year;
 char new_time_details_msg[12];
 /*	time	*/
 
 /*	date	*/
-uint8_t date_activated_flag;	// flaga sygnalizująca, że w tym momencie użytkownik ustawia nową date
-uint8_t date_set_flag;			// flaga sygnalizująca, że nowa data została pomyślnie ustawiona
+uint8_t date_activated_flag;	/** flaga sygnalizująca, że w tym momencie użytkownik ustawia nową date	*/
+uint8_t date_set_flag;			/** flaga sygnalizująca, że nowa data została pomyślnie ustawiona		*/
 char new_date_details_msg[12];
 /*	date	*/
 
 /*	alarm	*/
-uint8_t alarm_activated_flag;	// flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy alarm
-uint8_t alarm_set_flag; 		// flaga sygnalizująca, że alarm został pomyślnie ustawiony
-uint8_t alarm_flag; 			// flaga sygnalizująca włączenie się alarmu
+uint8_t alarm_activated_flag;	/** flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy alarm	*/
+uint8_t alarm_set_flag; 		/** flaga sygnalizująca, że alarm został pomyślnie ustawiony				*/
+uint8_t alarm_flag; 			/** flaga sygnalizująca włączenie się alarmu								*/
 
 uint8_t days_to_alarm, alarm_hour, alarm_min, alarm_sec;
 /*	alarm	*/
@@ -58,12 +57,11 @@ bool keypadSwitches[16] = {0};
 Keypad_Wires_TypeDef keypadStruct;
 /*	keypad	*/
 
-
 void to_do_after_wake_up_from_standby(void) {
 
 	lcd_back_light_on();
 
-	// wykonaj jeśli zaczął się alarm
+	/** wykonaj jeśli zaczął się alarm */
 	if(alarm_flag) {
 
 		while (alarm_flag) {
@@ -73,15 +71,16 @@ void to_do_after_wake_up_from_standby(void) {
 		to_do_on_alarm_off();
 	}
 
-	// Flaga SBF (Standby flag) mówi o tym, czy MCU wybudził się ze stanu standby
-	// SBF = 1 -> MCU wybudził się ze standby
+	/** Flaga SBF (Standby flag) mówi o tym, czy MCU wybudził się ze stanu standby
+	* SBF = 1 -> MCU wybudził się ze standby
+	*/
 
-	// na początku sprawdzamy czy nie jest ustawiona flaga SBF
+	/** na początku sprawdzamy czy nie jest ustawiona flaga SBF	*/
 	if(__HAL_PWR_GET_FLAG(PWR_FLAG_SB) != RESET) {
 
-	  __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);	// wyszyszczenie flagi SBF, aby upewnić się że nie jesteśmy w trybie stanby
+	  __HAL_PWR_CLEAR_FLAG(PWR_FLAG_SB);	/** wyszyszczenie flagi SBF, aby upewnić się że nie jesteśmy w trybie stanby	*/
 
-	  for(int i=0; i<15; i++) {
+	  for(int i=0; i<12; i++) {
 		  HAL_GPIO_TogglePin(Green_LED_GPIO_Port, Green_LED_Pin);
 		  delay(80);
 	  }
@@ -100,14 +99,14 @@ void to_do_after_wake_up_from_standby(void) {
 		  to_do_on_alarm();
 	  }
 
-	  // Wyłączenie pinu WAKE UP
+	  /** Wyłączenie pinu WAKE UP */
 	  HAL_PWR_DisableWakeUpPin(WakeUp_PIN_Pin);
 
-	  // Wyłączenie Wake up timer
+	  /** Wyłączenie Wake up timer */
 	  HAL_RTCEx_DeactivateWakeUpTimer(&hrtc);
 	}
 
-	// Keypad ports
+	/** Porty klawiatury */
 	keypadStruct.R1_Port = R1_GPIO_Port;
 	keypadStruct.R2_Port = R2_GPIO_Port;
 	keypadStruct.R3_Port = R3_GPIO_Port;
@@ -118,7 +117,7 @@ void to_do_after_wake_up_from_standby(void) {
 	keypadStruct.C3_Port = C3_GPIO_Port;
 	keypadStruct.C4_Port = C4_GPIO_Port;
 
-	// Keypad pins
+	/** Piny klawiatury */
 	keypadStruct.R1_pin = R1_Pin;
 	keypadStruct.R2_pin = R2_Pin;
 	keypadStruct.R3_pin = R3_Pin;
@@ -134,9 +133,11 @@ void to_do_after_wake_up_from_standby(void) {
 
 void to_do_before_going_to_standby(void) {
 
-	for(int i=0; i<3000; i++) {
+	for(int i=0; i<300; i++) {
 
-		// wykonaj jeśli zaczął się alarm
+		lcd_display_refresh();
+
+		/** wykonaj jeśli zaczął się alarm */
 		if(alarm_flag) {
 
 			while (alarm_flag) {
@@ -161,9 +162,7 @@ void to_do_before_going_to_standby(void) {
 
 		}
 
-		lcd_display_refresh();
-
-		// wykonaj jeśli użytkownik ustawił nową godzinę
+		/** wykonaj jeśli użytkownik ustawił nową godzinę */
 		if(time_set_flag) {
 
 			new_sec = time.seconds;
@@ -205,7 +204,7 @@ void to_do_before_going_to_standby(void) {
 
 		}
 
-		// wykonaj jeśli użytkownik ustawił nową datę
+		/** wykonaj jeśli użytkownik ustawił nową datę */
 		if(date_set_flag) {
 
 			new_sec = time.seconds;
@@ -249,10 +248,10 @@ void to_do_before_going_to_standby(void) {
 
 		}
 
-		// wykonaj jeśli użytkownik ustawił nowy czas alarmu
+		/** wykonaj jeśli użytkownik ustawił nowy czas alarmu */
 		if(alarm_set_flag) {
 
-			days_to_alarm = global_buffer[1];	// dni to drugi element, ponieważ pierwszy to literka a, mówiąca o tym, że ustawiamy alarm.
+			days_to_alarm = global_buffer[1];	/** dni to drugi element, ponieważ pierwszy to literka a, mówiąca o tym, że ustawiamy alarm. */
 			alarm_hour = global_buffer[2];
 			alarm_min = global_buffer[3];
 			alarm_sec = global_buffer[4];
@@ -261,14 +260,14 @@ void to_do_before_going_to_standby(void) {
 			alarm_set_flag = 0;
 		}
 
-		delay(10);		// 10 ms
+		delay(10);		/** ms	*/
 	}
 
 }
 
 void go_to_standby(void) {
 
-	// wykonaj jeśli zaczął się alarm
+	/** wykonaj jeśli zaczął się alarm */
 	if(alarm_flag) {
 
 		while (alarm_flag) {
@@ -278,10 +277,10 @@ void go_to_standby(void) {
 		to_do_on_alarm_off();
 	}
 
-	// Przed wejściem w tryb STANDBY, musimy wyczyścić flagę WU (Wake up)
+	/** Przed wejściem w tryb STANDBY, musimy wyczyścić flagę WU (Wake up) */
 	__HAL_PWR_CLEAR_FLAG(PWR_FLAG_WU);
 
-	// Jeśli urzywamy RTC do wybudzenia MCU, w tym projekcie wybudza ALARM A, musimy wyczyścić też flagę RTC Wake up
+	/**	Jeśli używamy RTC do wybudzenia MCU, w tym projekcie wybudza ALARM A, musimy wyczyścić też flagę RTC Wake up	*/
 	__HAL_RTC_WAKEUPTIMER_CLEAR_FLAG(&hrtc, RTC_FLAG_WUTF);
 
 	lcd_clear();
@@ -292,13 +291,14 @@ void go_to_standby(void) {
 	delay(1000);
 	lcd_clear();
 
-	// Przed wejściem w tryb STANDBY, musimy włączyć pin Wake up, aby mógł nas potem wybudzić z tego stanu
+	/**	Przed wejściem w tryb STANDBY, musimy włączyć pin Wake up, aby mógł nas potem wybudzić z tego stanu	*/
 	HAL_PWR_EnableWakeUpPin(WakeUp_PIN_Pin);
 
 
-	// Wybudzanie układu z trybu STANDBY, defaultowo co 30 sekund
-
-	// Włączenie RTC Wake up			  0x1D4C0 = 120_000 = 30 sekund,	4000 = 1s
+	/**
+	 * Wybudzanie układu z trybu STANDBY, defaultowo co 30 sekund.
+	 * Włączenie RTC Wake up			  0x1D4C0 = 120_000 = 30 sekund,	4000 = 1s
+	 */
 	if(HAL_RTCEx_SetWakeUpTimer_IT(&hrtc, 0x1D4C0, RTC_WAKEUPCLOCK_RTCCLK_DIV16) != HAL_OK) {
 		Error_Handler();
 	}
@@ -313,8 +313,6 @@ void go_to_standby(void) {
 	lcd_back_light_off();
 	lcd_clear();
 
-	HAL_NVIC_SetPriority(EXTI_LINE_22, 0, 0);	// Wybudzenie z trybu STANDBY ma najwyższy priorytet w układzie
-
-	// Finalnie wchodzimy w tryb STANDBY
+	/**	Finalnie wchodzimy w tryb STANDBY	*/
 	HAL_PWR_EnterSTANDBYMode();
 }

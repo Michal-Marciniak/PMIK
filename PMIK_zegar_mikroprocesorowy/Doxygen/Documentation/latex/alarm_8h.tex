@@ -1,0 +1,138 @@
+\hypertarget{alarm_8h}{}\doxysection{alarm.\+h File Reference}
+\label{alarm_8h}\index{alarm.h@{alarm.h}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{alarm_8h_accc8af421e91c0a2f85ce1d94cf9726d}{rtc\+\_\+set\+\_\+time}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja sczytująca dane z modułu RTC DS3231, oraz ustawiająca odpowiednią datę i godzinę zegara RTC. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8h_aae99e827ed6c7669f797c25eb249bfc6}{rtc\+\_\+set\+\_\+alarm}} (uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ae5af4ff48939d13d480f87e56a9385d6}{hour}}, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ac9b481208b43f7c37ed25e446bdec692}{min}}, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ad1696900026b287a87c563b733a21bc3}{sec}}, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a72369a1087b2aeffe374bb054cb97c12}{day}})
+\begin{DoxyCompactList}\small\item\em Funkcja ustawiająca alarm, na zadaną przez użytkownika godzinę. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8h_aa27d852ee759f98906c7534d1f35c66e}{activate\+\_\+time}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja ustawiająca flagę zmiany godziny. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8h_ad4f788bd9f8464f2def1c4cdc8908c73}{activate\+\_\+date}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja ustawiająca flagę zmiany daty. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8h_ac07a3ab5231deaa5abb070679de3b80b}{activate\+\_\+alarm}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja ustawiająca flagę zmiany alarmu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8h_a11aeff83fd498cddbed3bcddcf017e0a}{HAL\+\_\+\+RTC\+\_\+\+Alarm\+AEvent\+Callback}} (RTC\+\_\+\+Handle\+Type\+Def $\ast$hrtc)
+\begin{DoxyCompactList}\small\item\em Funkcja ustawiająca flagę włączenia alarmu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8h_ac564b08286d0e0d3ec2e6a1780956edd}{to\+\_\+do\+\_\+on\+\_\+alarm}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za obsługę programu, podczas alarmu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8h_abf5ea92c69548a15e3c0a6ca6eba161a}{to\+\_\+do\+\_\+on\+\_\+alarm\+\_\+off}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za obsługę programu, po wyłączeniu alarmu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8h_a0cd91fd3a9608559c2a87a8ba6cba55f}{HAL\+\_\+\+GPIO\+\_\+\+EXTI\+\_\+\+Callback}} (uint16\+\_\+t GPIO\+\_\+\+Pin)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{alarm_8h_ac07a3ab5231deaa5abb070679de3b80b}\label{alarm_8h_ac07a3ab5231deaa5abb070679de3b80b}} 
+\index{alarm.h@{alarm.h}!activate\_alarm@{activate\_alarm}}
+\index{activate\_alarm@{activate\_alarm}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{activate\_alarm()}{activate\_alarm()}}
+{\footnotesize\ttfamily void activate\+\_\+alarm (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja ustawiająca flagę zmiany alarmu. 
+
+Funkcja ustawiająca flagę zmiany alarmu. Po odebraniu danych, nasłuchuj ponownie na kolejne znaki\mbox{\Hypertarget{alarm_8h_ad4f788bd9f8464f2def1c4cdc8908c73}\label{alarm_8h_ad4f788bd9f8464f2def1c4cdc8908c73}} 
+\index{alarm.h@{alarm.h}!activate\_date@{activate\_date}}
+\index{activate\_date@{activate\_date}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{activate\_date()}{activate\_date()}}
+{\footnotesize\ttfamily void activate\+\_\+date (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja ustawiająca flagę zmiany daty. 
+
+Funkcja ustawiająca flagę zmiany daty. Po odebraniu danych, nasłuchuj ponownie na kolejne znaki\mbox{\Hypertarget{alarm_8h_aa27d852ee759f98906c7534d1f35c66e}\label{alarm_8h_aa27d852ee759f98906c7534d1f35c66e}} 
+\index{alarm.h@{alarm.h}!activate\_time@{activate\_time}}
+\index{activate\_time@{activate\_time}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{activate\_time()}{activate\_time()}}
+{\footnotesize\ttfamily void activate\+\_\+time (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja ustawiająca flagę zmiany godziny. 
+
+Funkcja ustawiająca flagę zmiany godziny. Po odebraniu danych, nasłuchuj ponownie na kolejne znaki\mbox{\Hypertarget{alarm_8h_a0cd91fd3a9608559c2a87a8ba6cba55f}\label{alarm_8h_a0cd91fd3a9608559c2a87a8ba6cba55f}} 
+\index{alarm.h@{alarm.h}!HAL\_GPIO\_EXTI\_Callback@{HAL\_GPIO\_EXTI\_Callback}}
+\index{HAL\_GPIO\_EXTI\_Callback@{HAL\_GPIO\_EXTI\_Callback}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{HAL\_GPIO\_EXTI\_Callback()}{HAL\_GPIO\_EXTI\_Callback()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+GPIO\+\_\+\+EXTI\+\_\+\+Callback (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{GPIO\+\_\+\+Pin }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em GPIO\+\_\+\+Pin} & Pin wywołujący przerwanie \\
+\hline
+\end{DoxyParams}
+Sprawdzamy czy przerwanie wywołał niebieski przycisk\mbox{\Hypertarget{alarm_8h_a11aeff83fd498cddbed3bcddcf017e0a}\label{alarm_8h_a11aeff83fd498cddbed3bcddcf017e0a}} 
+\index{alarm.h@{alarm.h}!HAL\_RTC\_AlarmAEventCallback@{HAL\_RTC\_AlarmAEventCallback}}
+\index{HAL\_RTC\_AlarmAEventCallback@{HAL\_RTC\_AlarmAEventCallback}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{HAL\_RTC\_AlarmAEventCallback()}{HAL\_RTC\_AlarmAEventCallback()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+RTC\+\_\+\+Alarm\+AEvent\+Callback (\begin{DoxyParamCaption}\item[{RTC\+\_\+\+Handle\+Type\+Def $\ast$}]{hrtc }\end{DoxyParamCaption})}
+
+
+
+Funkcja ustawiająca flagę włączenia alarmu. 
+
+\mbox{\Hypertarget{alarm_8h_aae99e827ed6c7669f797c25eb249bfc6}\label{alarm_8h_aae99e827ed6c7669f797c25eb249bfc6}} 
+\index{alarm.h@{alarm.h}!rtc\_set\_alarm@{rtc\_set\_alarm}}
+\index{rtc\_set\_alarm@{rtc\_set\_alarm}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{rtc\_set\_alarm()}{rtc\_set\_alarm()}}
+{\footnotesize\ttfamily void rtc\+\_\+set\+\_\+alarm (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{day,  }\item[{uint8\+\_\+t}]{hour,  }\item[{uint8\+\_\+t}]{min,  }\item[{uint8\+\_\+t}]{sec }\end{DoxyParamCaption})}
+
+
+
+Funkcja ustawiająca alarm, na zadaną przez użytkownika godzinę. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hour} & Godzina alarmu \\
+\hline
+{\em min} & Minuta alarmu \\
+\hline
+{\em sec} & Sekunda alarmu \\
+\hline
+{\em day} & Dzień tygodnia alarmu (pon. wt. ...)\\
+\hline
+\end{DoxyParams}
+Funkcja ustawiająca alarm, na zadaną przez użytkownika godzinę.
+
+Jako parametry przyjmuje ilość dni do alarmu, godzinę, minutę oraz sekundę alarmu Enable the Alarm A
+
+Enable the Alarm A
+
+Enable the Alarm A\mbox{\Hypertarget{alarm_8h_accc8af421e91c0a2f85ce1d94cf9726d}\label{alarm_8h_accc8af421e91c0a2f85ce1d94cf9726d}} 
+\index{alarm.h@{alarm.h}!rtc\_set\_time@{rtc\_set\_time}}
+\index{rtc\_set\_time@{rtc\_set\_time}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{rtc\_set\_time()}{rtc\_set\_time()}}
+{\footnotesize\ttfamily void rtc\+\_\+set\+\_\+time (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja sczytująca dane z modułu RTC DS3231, oraz ustawiająca odpowiednią datę i godzinę zegara RTC. 
+
+czas w RTC będzie taki sam jak w naszym DS3231\mbox{\Hypertarget{alarm_8h_ac564b08286d0e0d3ec2e6a1780956edd}\label{alarm_8h_ac564b08286d0e0d3ec2e6a1780956edd}} 
+\index{alarm.h@{alarm.h}!to\_do\_on\_alarm@{to\_do\_on\_alarm}}
+\index{to\_do\_on\_alarm@{to\_do\_on\_alarm}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{to\_do\_on\_alarm()}{to\_do\_on\_alarm()}}
+{\footnotesize\ttfamily void to\+\_\+do\+\_\+on\+\_\+alarm (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za obsługę programu, podczas alarmu. 
+
+\mbox{\Hypertarget{alarm_8h_abf5ea92c69548a15e3c0a6ca6eba161a}\label{alarm_8h_abf5ea92c69548a15e3c0a6ca6eba161a}} 
+\index{alarm.h@{alarm.h}!to\_do\_on\_alarm\_off@{to\_do\_on\_alarm\_off}}
+\index{to\_do\_on\_alarm\_off@{to\_do\_on\_alarm\_off}!alarm.h@{alarm.h}}
+\doxysubsubsection{\texorpdfstring{to\_do\_on\_alarm\_off()}{to\_do\_on\_alarm\_off()}}
+{\footnotesize\ttfamily void to\+\_\+do\+\_\+on\+\_\+alarm\+\_\+off (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za obsługę programu, po wyłączeniu alarmu. 
+

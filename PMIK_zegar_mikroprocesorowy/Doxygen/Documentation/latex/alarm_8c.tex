@@ -1,0 +1,354 @@
+\hypertarget{alarm_8c}{}\doxysection{alarm.\+c File Reference}
+\label{alarm_8c}\index{alarm.c@{alarm.c}}
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_t_i_m_e}{TIME}}
+\begin{DoxyCompactList}\small\item\em Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{alarm_8c_a06d872375651ec6f0e6ac4d9d170e51d}{rtc\+\_\+set\+\_\+time}} ()
+\begin{DoxyCompactList}\small\item\em Funkcja sczytująca dane z modułu RTC DS3231, oraz ustawiająca odpowiednią datę i godzinę zegara RTC. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8c_a18056489ddeb643a4e197a93a8e10acb}{rtc\+\_\+set\+\_\+alarm}} (uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a72369a1087b2aeffe374bb054cb97c12}{day}}, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ae5af4ff48939d13d480f87e56a9385d6}{hour}}, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ac9b481208b43f7c37ed25e446bdec692}{min}}, uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ad1696900026b287a87c563b733a21bc3}{sec}})
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za ustawienie alarmu o danej godzinie, i w danym dniu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8c_a27bd7a389efb7a837c04ca75a09b0c21}{activate\+\_\+time}} ()
+\begin{DoxyCompactList}\small\item\em Funkcja sygnalizująca, że użytkownik ustawia nową godzinę na zegarku. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8c_a678bcf453fce31aa827ebc7caaf703b5}{activate\+\_\+date}} ()
+\begin{DoxyCompactList}\small\item\em Funkcja sygnalizująca, że użytkownik ustawia nową datę na zegarku. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8c_ae1b4e52e50a703d423793a623d1aadc4}{activate\+\_\+alarm}} ()
+\begin{DoxyCompactList}\small\item\em Funkcja sygnalizująca, że użytkownik ustawia nowy alarm. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8c_a11aeff83fd498cddbed3bcddcf017e0a}{HAL\+\_\+\+RTC\+\_\+\+Alarm\+AEvent\+Callback}} (RTC\+\_\+\+Handle\+Type\+Def $\ast$hrtc)
+\begin{DoxyCompactList}\small\item\em Funkcja ustawiająca flagę włączenia alarmu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8c_a49a836e9d7af178647284d2e1d64c36f}{to\+\_\+do\+\_\+on\+\_\+alarm}} ()
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za obsługę programu, podczas alarmu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8c_ae1e9d712e580c51e374cafb0043792d7}{to\+\_\+do\+\_\+on\+\_\+alarm\+\_\+off}} ()
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za obsługę programu, po wyłączeniu alarmu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{alarm_8c_a0cd91fd3a9608559c2a87a8ba6cba55f}{HAL\+\_\+\+GPIO\+\_\+\+EXTI\+\_\+\+Callback}} (uint16\+\_\+t GPIO\+\_\+\+Pin)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_t_i_m_e}{TIME}} \mbox{\hyperlink{alarm_8c_a2893aa73f23bea0e0033498ad0214e0f}{time}}
+\item 
+RTC\+\_\+\+Time\+Type\+Def \mbox{\hyperlink{alarm_8c_afed4f29eda0f2d0900a0b347e29a8c91}{s\+Time}}
+\item 
+RTC\+\_\+\+Date\+Type\+Def \mbox{\hyperlink{alarm_8c_aa805acf5185e2a95f250a2da91bf84e0}{s\+Date}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a847cc143368c390290f30e0f0e9c6eba}{global\+\_\+counter}} = 0
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a7c79449a16434b12dbc5227aeac4d68f}{global\+\_\+buffer}} \mbox{[}5\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a5c5b6d941324d1e8bd10f7674793b836}{time\+\_\+activated\+\_\+flag}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_abcc3a3242cd782f252805447c7f3493f}{time\+\_\+set\+\_\+flag}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ae5af4ff48939d13d480f87e56a9385d6}{hour}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ac9b481208b43f7c37ed25e446bdec692}{min}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ad1696900026b287a87c563b733a21bc3}{sec}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a4656fac74c0eb49476acf3ed53b02920}{date\+\_\+activated\+\_\+flag}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a650659ca8fcfd629e077636d3bc21012}{date\+\_\+set\+\_\+flag}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a72369a1087b2aeffe374bb054cb97c12}{day}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a7af2065789bc84419b8d5fe109be83b5}{year}}
+\item 
+RTC\+\_\+\+Alarm\+Type\+Def \mbox{\hyperlink{alarm_8c_a22eb04f6640dc2f76a7871fe525c7da3}{s\+Alarm}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_abea9fa5faf2c0cdb17a024ac24a92826}{alarm\+\_\+day}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a912612a2733916065ce622f524b05929}{alarm\+\_\+hour}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_aa9db106f5043e8951a23690058a3e2d3}{alarm\+\_\+min}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a5f57777fe2d9100fdd6b1b9490199abf}{alarm\+\_\+sec}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a222aa5f77ddda20747c248b44e1eda00}{alarm\+\_\+activated\+\_\+flag}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_af0082cd6fdcdd58f81d880fc25fbbe5c}{alarm\+\_\+set\+\_\+flag}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_a1ae0d7e7677a2dff8159b4f237c864dc}{alarm\+\_\+flag}}
+\item 
+char \mbox{\hyperlink{alarm_8c_ae08c38aa5d39811cf879c9a582eb5735}{alarm\+\_\+on\+\_\+msg}} \mbox{[}20\mbox{]} = \char`\"{}Wylacz alarm!\textbackslash{}n\textbackslash{}r\char`\"{}
+\item 
+char \mbox{\hyperlink{alarm_8c_a792b5ed2267b1cad641a489a581e1750}{alarm\+\_\+off\+\_\+msg}} \mbox{[}20\mbox{]} = \char`\"{}Alarm wylaczony!\textbackslash{}n\textbackslash{}r\char`\"{}
+\item 
+char \mbox{\hyperlink{alarm_8c_ab6a20104f718764fba6d6cf804fea250}{alarm\+\_\+details\+\_\+msg}} \mbox{[}9\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_ae713a6952b3dfd08b26cc09008807094}{uart\+\_\+rx\+\_\+data}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{alarm_8c_af37828397460d90a0e0cac8028637c95}{BT\+\_\+rx\+\_\+data}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{alarm_8c_ae1b4e52e50a703d423793a623d1aadc4}\label{alarm_8c_ae1b4e52e50a703d423793a623d1aadc4}} 
+\index{alarm.c@{alarm.c}!activate\_alarm@{activate\_alarm}}
+\index{activate\_alarm@{activate\_alarm}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{activate\_alarm()}{activate\_alarm()}}
+{\footnotesize\ttfamily void activate\+\_\+alarm (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja sygnalizująca, że użytkownik ustawia nowy alarm. 
+
+Funkcja ustawiająca flagę zmiany alarmu. Po odebraniu danych, nasłuchuj ponownie na kolejne znaki\mbox{\Hypertarget{alarm_8c_a678bcf453fce31aa827ebc7caaf703b5}\label{alarm_8c_a678bcf453fce31aa827ebc7caaf703b5}} 
+\index{alarm.c@{alarm.c}!activate\_date@{activate\_date}}
+\index{activate\_date@{activate\_date}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{activate\_date()}{activate\_date()}}
+{\footnotesize\ttfamily void activate\+\_\+date (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja sygnalizująca, że użytkownik ustawia nową datę na zegarku. 
+
+Funkcja ustawiająca flagę zmiany daty. Po odebraniu danych, nasłuchuj ponownie na kolejne znaki\mbox{\Hypertarget{alarm_8c_a27bd7a389efb7a837c04ca75a09b0c21}\label{alarm_8c_a27bd7a389efb7a837c04ca75a09b0c21}} 
+\index{alarm.c@{alarm.c}!activate\_time@{activate\_time}}
+\index{activate\_time@{activate\_time}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{activate\_time()}{activate\_time()}}
+{\footnotesize\ttfamily void activate\+\_\+time (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja sygnalizująca, że użytkownik ustawia nową godzinę na zegarku. 
+
+Funkcja ustawiająca flagę zmiany godziny. Po odebraniu danych, nasłuchuj ponownie na kolejne znaki\mbox{\Hypertarget{alarm_8c_a0cd91fd3a9608559c2a87a8ba6cba55f}\label{alarm_8c_a0cd91fd3a9608559c2a87a8ba6cba55f}} 
+\index{alarm.c@{alarm.c}!HAL\_GPIO\_EXTI\_Callback@{HAL\_GPIO\_EXTI\_Callback}}
+\index{HAL\_GPIO\_EXTI\_Callback@{HAL\_GPIO\_EXTI\_Callback}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_GPIO\_EXTI\_Callback()}{HAL\_GPIO\_EXTI\_Callback()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+GPIO\+\_\+\+EXTI\+\_\+\+Callback (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{GPIO\+\_\+\+Pin }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em GPIO\+\_\+\+Pin} & Pin wywołujący przerwanie \\
+\hline
+\end{DoxyParams}
+Sprawdzamy czy przerwanie wywołał niebieski przycisk\mbox{\Hypertarget{alarm_8c_a11aeff83fd498cddbed3bcddcf017e0a}\label{alarm_8c_a11aeff83fd498cddbed3bcddcf017e0a}} 
+\index{alarm.c@{alarm.c}!HAL\_RTC\_AlarmAEventCallback@{HAL\_RTC\_AlarmAEventCallback}}
+\index{HAL\_RTC\_AlarmAEventCallback@{HAL\_RTC\_AlarmAEventCallback}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_RTC\_AlarmAEventCallback()}{HAL\_RTC\_AlarmAEventCallback()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+RTC\+\_\+\+Alarm\+AEvent\+Callback (\begin{DoxyParamCaption}\item[{RTC\+\_\+\+Handle\+Type\+Def $\ast$}]{hrtc }\end{DoxyParamCaption})}
+
+
+
+Funkcja ustawiająca flagę włączenia alarmu. 
+
+\mbox{\Hypertarget{alarm_8c_a18056489ddeb643a4e197a93a8e10acb}\label{alarm_8c_a18056489ddeb643a4e197a93a8e10acb}} 
+\index{alarm.c@{alarm.c}!rtc\_set\_alarm@{rtc\_set\_alarm}}
+\index{rtc\_set\_alarm@{rtc\_set\_alarm}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{rtc\_set\_alarm()}{rtc\_set\_alarm()}}
+{\footnotesize\ttfamily void rtc\+\_\+set\+\_\+alarm (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{day,  }\item[{uint8\+\_\+t}]{hour,  }\item[{uint8\+\_\+t}]{min,  }\item[{uint8\+\_\+t}]{sec }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za ustawienie alarmu o danej godzinie, i w danym dniu. 
+
+Funkcja ustawiająca alarm, na zadaną przez użytkownika godzinę.
+
+Jako parametry przyjmuje ilość dni do alarmu, godzinę, minutę oraz sekundę alarmu Enable the Alarm A
+
+Enable the Alarm A
+
+Enable the Alarm A\mbox{\Hypertarget{alarm_8c_a06d872375651ec6f0e6ac4d9d170e51d}\label{alarm_8c_a06d872375651ec6f0e6ac4d9d170e51d}} 
+\index{alarm.c@{alarm.c}!rtc\_set\_time@{rtc\_set\_time}}
+\index{rtc\_set\_time@{rtc\_set\_time}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{rtc\_set\_time()}{rtc\_set\_time()}}
+{\footnotesize\ttfamily void rtc\+\_\+set\+\_\+time (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja sczytująca dane z modułu RTC DS3231, oraz ustawiająca odpowiednią datę i godzinę zegara RTC. 
+
+czas w RTC będzie taki sam jak w naszym DS3231\mbox{\Hypertarget{alarm_8c_a49a836e9d7af178647284d2e1d64c36f}\label{alarm_8c_a49a836e9d7af178647284d2e1d64c36f}} 
+\index{alarm.c@{alarm.c}!to\_do\_on\_alarm@{to\_do\_on\_alarm}}
+\index{to\_do\_on\_alarm@{to\_do\_on\_alarm}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{to\_do\_on\_alarm()}{to\_do\_on\_alarm()}}
+{\footnotesize\ttfamily void to\+\_\+do\+\_\+on\+\_\+alarm (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za obsługę programu, podczas alarmu. 
+
+\mbox{\Hypertarget{alarm_8c_ae1e9d712e580c51e374cafb0043792d7}\label{alarm_8c_ae1e9d712e580c51e374cafb0043792d7}} 
+\index{alarm.c@{alarm.c}!to\_do\_on\_alarm\_off@{to\_do\_on\_alarm\_off}}
+\index{to\_do\_on\_alarm\_off@{to\_do\_on\_alarm\_off}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{to\_do\_on\_alarm\_off()}{to\_do\_on\_alarm\_off()}}
+{\footnotesize\ttfamily void to\+\_\+do\+\_\+on\+\_\+alarm\+\_\+off (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za obsługę programu, po wyłączeniu alarmu. 
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{alarm_8c_a222aa5f77ddda20747c248b44e1eda00}\label{alarm_8c_a222aa5f77ddda20747c248b44e1eda00}} 
+\index{alarm.c@{alarm.c}!alarm\_activated\_flag@{alarm\_activated\_flag}}
+\index{alarm\_activated\_flag@{alarm\_activated\_flag}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_activated\_flag}{alarm\_activated\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+activated\+\_\+flag}
+
+\mbox{\Hypertarget{alarm_8c_abea9fa5faf2c0cdb17a024ac24a92826}\label{alarm_8c_abea9fa5faf2c0cdb17a024ac24a92826}} 
+\index{alarm.c@{alarm.c}!alarm\_day@{alarm\_day}}
+\index{alarm\_day@{alarm\_day}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_day}{alarm\_day}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+day}
+
+\mbox{\Hypertarget{alarm_8c_ab6a20104f718764fba6d6cf804fea250}\label{alarm_8c_ab6a20104f718764fba6d6cf804fea250}} 
+\index{alarm.c@{alarm.c}!alarm\_details\_msg@{alarm\_details\_msg}}
+\index{alarm\_details\_msg@{alarm\_details\_msg}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_details\_msg}{alarm\_details\_msg}}
+{\footnotesize\ttfamily char alarm\+\_\+details\+\_\+msg\mbox{[}9\mbox{]}}
+
+\mbox{\Hypertarget{alarm_8c_a1ae0d7e7677a2dff8159b4f237c864dc}\label{alarm_8c_a1ae0d7e7677a2dff8159b4f237c864dc}} 
+\index{alarm.c@{alarm.c}!alarm\_flag@{alarm\_flag}}
+\index{alarm\_flag@{alarm\_flag}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_flag}{alarm\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+flag}
+
+\mbox{\Hypertarget{alarm_8c_a912612a2733916065ce622f524b05929}\label{alarm_8c_a912612a2733916065ce622f524b05929}} 
+\index{alarm.c@{alarm.c}!alarm\_hour@{alarm\_hour}}
+\index{alarm\_hour@{alarm\_hour}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_hour}{alarm\_hour}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+hour}
+
+\mbox{\Hypertarget{alarm_8c_aa9db106f5043e8951a23690058a3e2d3}\label{alarm_8c_aa9db106f5043e8951a23690058a3e2d3}} 
+\index{alarm.c@{alarm.c}!alarm\_min@{alarm\_min}}
+\index{alarm\_min@{alarm\_min}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_min}{alarm\_min}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+min}
+
+\mbox{\Hypertarget{alarm_8c_a792b5ed2267b1cad641a489a581e1750}\label{alarm_8c_a792b5ed2267b1cad641a489a581e1750}} 
+\index{alarm.c@{alarm.c}!alarm\_off\_msg@{alarm\_off\_msg}}
+\index{alarm\_off\_msg@{alarm\_off\_msg}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_off\_msg}{alarm\_off\_msg}}
+{\footnotesize\ttfamily char alarm\+\_\+off\+\_\+msg\mbox{[}20\mbox{]} = \char`\"{}Alarm wylaczony!\textbackslash{}n\textbackslash{}r\char`\"{}}
+
+\mbox{\Hypertarget{alarm_8c_ae08c38aa5d39811cf879c9a582eb5735}\label{alarm_8c_ae08c38aa5d39811cf879c9a582eb5735}} 
+\index{alarm.c@{alarm.c}!alarm\_on\_msg@{alarm\_on\_msg}}
+\index{alarm\_on\_msg@{alarm\_on\_msg}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_on\_msg}{alarm\_on\_msg}}
+{\footnotesize\ttfamily char alarm\+\_\+on\+\_\+msg\mbox{[}20\mbox{]} = \char`\"{}Wylacz alarm!\textbackslash{}n\textbackslash{}r\char`\"{}}
+
+\mbox{\Hypertarget{alarm_8c_a5f57777fe2d9100fdd6b1b9490199abf}\label{alarm_8c_a5f57777fe2d9100fdd6b1b9490199abf}} 
+\index{alarm.c@{alarm.c}!alarm\_sec@{alarm\_sec}}
+\index{alarm\_sec@{alarm\_sec}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_sec}{alarm\_sec}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+sec}
+
+\mbox{\Hypertarget{alarm_8c_af0082cd6fdcdd58f81d880fc25fbbe5c}\label{alarm_8c_af0082cd6fdcdd58f81d880fc25fbbe5c}} 
+\index{alarm.c@{alarm.c}!alarm\_set\_flag@{alarm\_set\_flag}}
+\index{alarm\_set\_flag@{alarm\_set\_flag}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_set\_flag}{alarm\_set\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+set\+\_\+flag}
+
+\mbox{\Hypertarget{alarm_8c_af37828397460d90a0e0cac8028637c95}\label{alarm_8c_af37828397460d90a0e0cac8028637c95}} 
+\index{alarm.c@{alarm.c}!BT\_rx\_data@{BT\_rx\_data}}
+\index{BT\_rx\_data@{BT\_rx\_data}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{BT\_rx\_data}{BT\_rx\_data}}
+{\footnotesize\ttfamily uint8\+\_\+t BT\+\_\+rx\+\_\+data}
+
+\mbox{\Hypertarget{alarm_8c_a4656fac74c0eb49476acf3ed53b02920}\label{alarm_8c_a4656fac74c0eb49476acf3ed53b02920}} 
+\index{alarm.c@{alarm.c}!date\_activated\_flag@{date\_activated\_flag}}
+\index{date\_activated\_flag@{date\_activated\_flag}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{date\_activated\_flag}{date\_activated\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t date\+\_\+activated\+\_\+flag}
+
+\mbox{\Hypertarget{alarm_8c_a650659ca8fcfd629e077636d3bc21012}\label{alarm_8c_a650659ca8fcfd629e077636d3bc21012}} 
+\index{alarm.c@{alarm.c}!date\_set\_flag@{date\_set\_flag}}
+\index{date\_set\_flag@{date\_set\_flag}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{date\_set\_flag}{date\_set\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t date\+\_\+set\+\_\+flag}
+
+\mbox{\Hypertarget{alarm_8c_a72369a1087b2aeffe374bb054cb97c12}\label{alarm_8c_a72369a1087b2aeffe374bb054cb97c12}} 
+\index{alarm.c@{alarm.c}!day@{day}}
+\index{day@{day}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{day}{day}}
+{\footnotesize\ttfamily uint8\+\_\+t day}
+
+\mbox{\Hypertarget{alarm_8c_a7c79449a16434b12dbc5227aeac4d68f}\label{alarm_8c_a7c79449a16434b12dbc5227aeac4d68f}} 
+\index{alarm.c@{alarm.c}!global\_buffer@{global\_buffer}}
+\index{global\_buffer@{global\_buffer}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{global\_buffer}{global\_buffer}}
+{\footnotesize\ttfamily uint8\+\_\+t global\+\_\+buffer\mbox{[}5\mbox{]}}
+
+\mbox{\Hypertarget{alarm_8c_a847cc143368c390290f30e0f0e9c6eba}\label{alarm_8c_a847cc143368c390290f30e0f0e9c6eba}} 
+\index{alarm.c@{alarm.c}!global\_counter@{global\_counter}}
+\index{global\_counter@{global\_counter}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{global\_counter}{global\_counter}}
+{\footnotesize\ttfamily uint8\+\_\+t global\+\_\+counter = 0}
+
+\mbox{\Hypertarget{alarm_8c_ae5af4ff48939d13d480f87e56a9385d6}\label{alarm_8c_ae5af4ff48939d13d480f87e56a9385d6}} 
+\index{alarm.c@{alarm.c}!hour@{hour}}
+\index{hour@{hour}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{hour}{hour}}
+{\footnotesize\ttfamily uint8\+\_\+t hour}
+
+\mbox{\Hypertarget{alarm_8c_ac9b481208b43f7c37ed25e446bdec692}\label{alarm_8c_ac9b481208b43f7c37ed25e446bdec692}} 
+\index{alarm.c@{alarm.c}!min@{min}}
+\index{min@{min}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{min}{min}}
+{\footnotesize\ttfamily uint8\+\_\+t min}
+
+\mbox{\Hypertarget{alarm_8c_a22eb04f6640dc2f76a7871fe525c7da3}\label{alarm_8c_a22eb04f6640dc2f76a7871fe525c7da3}} 
+\index{alarm.c@{alarm.c}!sAlarm@{sAlarm}}
+\index{sAlarm@{sAlarm}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{sAlarm}{sAlarm}}
+{\footnotesize\ttfamily RTC\+\_\+\+Alarm\+Type\+Def s\+Alarm}
+
+\mbox{\Hypertarget{alarm_8c_aa805acf5185e2a95f250a2da91bf84e0}\label{alarm_8c_aa805acf5185e2a95f250a2da91bf84e0}} 
+\index{alarm.c@{alarm.c}!sDate@{sDate}}
+\index{sDate@{sDate}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{sDate}{sDate}}
+{\footnotesize\ttfamily RTC\+\_\+\+Date\+Type\+Def s\+Date}
+
+\mbox{\Hypertarget{alarm_8c_ad1696900026b287a87c563b733a21bc3}\label{alarm_8c_ad1696900026b287a87c563b733a21bc3}} 
+\index{alarm.c@{alarm.c}!sec@{sec}}
+\index{sec@{sec}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{sec}{sec}}
+{\footnotesize\ttfamily uint8\+\_\+t sec}
+
+\mbox{\Hypertarget{alarm_8c_afed4f29eda0f2d0900a0b347e29a8c91}\label{alarm_8c_afed4f29eda0f2d0900a0b347e29a8c91}} 
+\index{alarm.c@{alarm.c}!sTime@{sTime}}
+\index{sTime@{sTime}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{sTime}{sTime}}
+{\footnotesize\ttfamily RTC\+\_\+\+Time\+Type\+Def s\+Time}
+
+\mbox{\Hypertarget{alarm_8c_a2893aa73f23bea0e0033498ad0214e0f}\label{alarm_8c_a2893aa73f23bea0e0033498ad0214e0f}} 
+\index{alarm.c@{alarm.c}!time@{time}}
+\index{time@{time}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{time}{time}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_t_i_m_e}{TIME}} time}
+
+\mbox{\Hypertarget{alarm_8c_a5c5b6d941324d1e8bd10f7674793b836}\label{alarm_8c_a5c5b6d941324d1e8bd10f7674793b836}} 
+\index{alarm.c@{alarm.c}!time\_activated\_flag@{time\_activated\_flag}}
+\index{time\_activated\_flag@{time\_activated\_flag}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{time\_activated\_flag}{time\_activated\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t time\+\_\+activated\+\_\+flag}
+
+\mbox{\Hypertarget{alarm_8c_abcc3a3242cd782f252805447c7f3493f}\label{alarm_8c_abcc3a3242cd782f252805447c7f3493f}} 
+\index{alarm.c@{alarm.c}!time\_set\_flag@{time\_set\_flag}}
+\index{time\_set\_flag@{time\_set\_flag}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{time\_set\_flag}{time\_set\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t time\+\_\+set\+\_\+flag}
+
+\mbox{\Hypertarget{alarm_8c_ae713a6952b3dfd08b26cc09008807094}\label{alarm_8c_ae713a6952b3dfd08b26cc09008807094}} 
+\index{alarm.c@{alarm.c}!uart\_rx\_data@{uart\_rx\_data}}
+\index{uart\_rx\_data@{uart\_rx\_data}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{uart\_rx\_data}{uart\_rx\_data}}
+{\footnotesize\ttfamily uint8\+\_\+t uart\+\_\+rx\+\_\+data}
+
+\mbox{\Hypertarget{alarm_8c_a7af2065789bc84419b8d5fe109be83b5}\label{alarm_8c_a7af2065789bc84419b8d5fe109be83b5}} 
+\index{alarm.c@{alarm.c}!year@{year}}
+\index{year@{year}!alarm.c@{alarm.c}}
+\doxysubsubsection{\texorpdfstring{year}{year}}
+{\footnotesize\ttfamily uint8\+\_\+t year}
+

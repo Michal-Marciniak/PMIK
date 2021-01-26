@@ -1,0 +1,87 @@
+\hypertarget{keypad_8c}{}\doxysection{keypad.\+c File Reference}
+\label{keypad_8c}\index{keypad.c@{keypad.c}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{keypad_8c_a2a892cf277fdc9fc7a6f317a54861ff4}{keypad4x4\+\_\+\+Init}} (\mbox{\hyperlink{struct_keypad___wires___type_def}{Keypad\+\_\+\+Wires\+\_\+\+Type\+Def}} $\ast$Keypad\+Wiring\+Struct)
+\begin{DoxyCompactList}\small\item\em Funkcja inicjalizująca klawiaturę 4x4. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{keypad_8c_af996589076870cbd99f56b5f445c7592}{keypad4x4\+\_\+\+Find\+Pins\+\_\+positions}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja wykrywająca kolumnę, która zawiera wciśnięty klawisz. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{keypad_8c_ac85f4c65d37775999521223b47639ac0}{keypad4x4\+\_\+\+Change\+Column}} (uint8\+\_\+t col\+\_\+num)
+\begin{DoxyCompactList}\small\item\em Funkcja zmieniająca numer odczytywanej kolumny. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{keypad_8c_aadd029da7f26063da407095e008b3bf9}{keypad4x4\+\_\+\+Read\+Keypad}} (bool keys\mbox{[}16\mbox{]})
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za odczytanie aktualnie wciśniętego przycisku. \end{DoxyCompactList}\item 
+char $\ast$ \mbox{\hyperlink{keypad_8c_a7931254e87af25599d45c077666c2221}{keypad4x4\+\_\+\+Get\+Char}} (uint8\+\_\+t keypad\+\_\+char\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za zwrócenie aktualnie wciśniętego znaku. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{keypad_8c_a266732d9c228f9bac150e7554734d112}{idx}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{keypad_8c_ac85f4c65d37775999521223b47639ac0}\label{keypad_8c_ac85f4c65d37775999521223b47639ac0}} 
+\index{keypad.c@{keypad.c}!keypad4x4\_ChangeColumn@{keypad4x4\_ChangeColumn}}
+\index{keypad4x4\_ChangeColumn@{keypad4x4\_ChangeColumn}!keypad.c@{keypad.c}}
+\doxysubsubsection{\texorpdfstring{keypad4x4\_ChangeColumn()}{keypad4x4\_ChangeColumn()}}
+{\footnotesize\ttfamily void keypad4x4\+\_\+\+Change\+Column (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{col\+\_\+num }\end{DoxyParamCaption})}
+
+
+
+Funkcja zmieniająca numer odczytywanej kolumny. 
+
+\mbox{\Hypertarget{keypad_8c_af996589076870cbd99f56b5f445c7592}\label{keypad_8c_af996589076870cbd99f56b5f445c7592}} 
+\index{keypad.c@{keypad.c}!keypad4x4\_FindPins\_positions@{keypad4x4\_FindPins\_positions}}
+\index{keypad4x4\_FindPins\_positions@{keypad4x4\_FindPins\_positions}!keypad.c@{keypad.c}}
+\doxysubsubsection{\texorpdfstring{keypad4x4\_FindPins\_positions()}{keypad4x4\_FindPins\_positions()}}
+{\footnotesize\ttfamily void keypad4x4\+\_\+\+Find\+Pins\+\_\+positions (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja wykrywająca kolumnę, która zawiera wciśnięty klawisz. 
+
+\mbox{\Hypertarget{keypad_8c_a7931254e87af25599d45c077666c2221}\label{keypad_8c_a7931254e87af25599d45c077666c2221}} 
+\index{keypad.c@{keypad.c}!keypad4x4\_GetChar@{keypad4x4\_GetChar}}
+\index{keypad4x4\_GetChar@{keypad4x4\_GetChar}!keypad.c@{keypad.c}}
+\doxysubsubsection{\texorpdfstring{keypad4x4\_GetChar()}{keypad4x4\_GetChar()}}
+{\footnotesize\ttfamily char$\ast$ keypad4x4\+\_\+\+Get\+Char (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{keypad\+\_\+char\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za zwrócenie aktualnie wciśniętego znaku. 
+
+\mbox{\Hypertarget{keypad_8c_a2a892cf277fdc9fc7a6f317a54861ff4}\label{keypad_8c_a2a892cf277fdc9fc7a6f317a54861ff4}} 
+\index{keypad.c@{keypad.c}!keypad4x4\_Init@{keypad4x4\_Init}}
+\index{keypad4x4\_Init@{keypad4x4\_Init}!keypad.c@{keypad.c}}
+\doxysubsubsection{\texorpdfstring{keypad4x4\_Init()}{keypad4x4\_Init()}}
+{\footnotesize\ttfamily void keypad4x4\+\_\+\+Init (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{struct_keypad___wires___type_def}{Keypad\+\_\+\+Wires\+\_\+\+Type\+Def}} $\ast$}]{Keypad\+Wiring\+Struct }\end{DoxyParamCaption})}
+
+
+
+Funkcja inicjalizująca klawiaturę 4x4. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Keypad\+Wiring\+Struct} & Wskaźnik na strukturę przechowującą piny oraz porty klawiszy \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{keypad_8c_aadd029da7f26063da407095e008b3bf9}\label{keypad_8c_aadd029da7f26063da407095e008b3bf9}} 
+\index{keypad.c@{keypad.c}!keypad4x4\_ReadKeypad@{keypad4x4\_ReadKeypad}}
+\index{keypad4x4\_ReadKeypad@{keypad4x4\_ReadKeypad}!keypad.c@{keypad.c}}
+\doxysubsubsection{\texorpdfstring{keypad4x4\_ReadKeypad()}{keypad4x4\_ReadKeypad()}}
+{\footnotesize\ttfamily void keypad4x4\+\_\+\+Read\+Keypad (\begin{DoxyParamCaption}\item[{bool}]{keys\mbox{[}16\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za odczytanie aktualnie wciśniętego przycisku. 
+
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{keypad_8c_a266732d9c228f9bac150e7554734d112}\label{keypad_8c_a266732d9c228f9bac150e7554734d112}} 
+\index{keypad.c@{keypad.c}!idx@{idx}}
+\index{idx@{idx}!keypad.c@{keypad.c}}
+\doxysubsubsection{\texorpdfstring{idx}{idx}}
+{\footnotesize\ttfamily uint8\+\_\+t idx}
+

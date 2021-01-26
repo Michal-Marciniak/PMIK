@@ -1,10 +1,10 @@
 /* USER CODE BEGIN Header */
 
-/* Projekt zegara mikroprocesorowego zrealizowanego na płytce Nucleo F401RE.
- * Układ posiada możliwość wyświetlania czasu, daty lub alarmów na wyświetlaczu LCD HD44780,
- * podłączonym do płytki za pomocą interfejsu i2c.
- * Dodatkowo układ posiada moduł RTC czasu rzeczywistego, dzięki któremu możliwe jest
- * zapamiętanie aktualnego czasu i daty, nawet po wyłączeniu zasilania mikroprocesora.
+/** Projekt zegara mikroprocesorowego zrealizowanego na płytce Nucleo F401RE.
+ * Układ posiada możliwość wyświetlania czasu, daty oraz dnia tygodnia na wyświetlaczu LCD HD44780.
+ * Wyświetlacz podłączony jest do płytki za pomocą interfejsu I2C.
+ * Dodatkowo układ posiada moduł RTC czasu rzeczywistego,
+ * dzięki któremu możliwe jest zapamiętanie aktualnego czasu i daty, nawet po wyłączeniu zasilania mikroprocesora.
  * Za pomocą klawiatury w komputerze, użtykownik jest w stanie zmienić czas, datę lub nastawić alarm.
  * Komunikacja ta odbywa się za pomocą intefejsu USART.
  */
@@ -27,6 +27,8 @@
 #include "time.h"
 #include "alarm.h"
 #include "standby.h"
+#include <stdbool.h>
+#include <stdbool.h>
 
 /* USER CODE END Includes */
 
@@ -41,7 +43,6 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -58,6 +59,13 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint8_t uart_rx_data;
+uint8_t BT_rx_data;
+
+uint8_t i, is_BT_rx_complete;
+char BT_rx_string[2];
+int BT_rx_int, BT_array_max_size, is_BT_data_valid;
+
+uint8_t alarm_flag;
 /* USER CODE END 0 */
 
 /**
@@ -67,7 +75,6 @@ uint8_t uart_rx_data;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -76,14 +83,12 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -93,30 +98,33 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C2_Init();
   MX_TIM1_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
 
-	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
-	HAL_GPIO_WritePin(Green_LED_GPIO_Port, Green_LED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(Green_LED_GPIO_Port, Green_LED_Pin, GPIO_PIN_RESET);
 
-	/****************** LCD BEGIN ******************/
-	lcd_init();
-	/****************** LCD END ******************/
+  /****************** LCD BEGIN ******************/
+  lcd_init();
+  /****************** LCD END ******************/
 
-	//set_Time(10, 59, 15, 7, 29, 11, 20);
-	rtc_set_time();	// Wpisanie do rejestru RTC, czasu i daty pobranych z DS3231, aby czas w RTC był aktualny
+  /**
+   * Wpisanie do rejestru RTC, czasu i daty pobranych z modułu RTC, aby czas w RTC był aktualny
+   */
+  rtc_set_time();
 
-	/****************** UART BEGIN ******************/
-	// Funkcja odpowiedzialna za odbiór jednego znaku z uart2 w trybie przerwaniowym, i zapisanie go w zmiennej uart_rx_data.
-	// Po odebraniu znaku, nastąpi przerwanie które zostanie obsłużone przez funkcję callback HAL_UART_RxCpltCallback.
-	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+  /****************** UART BEGIN ******************/
+  /**
+   * Funkcja odpowiedzialna za odbiór jednego znaku z uart2 w trybie przerwaniowym, i zapisanie go w zmiennej uart_rx_data.
+   * Po odebraniu znaku, nastąpi przerwanie które zostanie obsłużone przez funkcję callback HAL_UART_RxCpltCallback.
+   */
+  HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+  HAL_UART_Receive_IT(&huart6, &BT_rx_data, 1);
+  /****************** UART END ******************/
 
-	// wystąpienie przerwania po ukończeniu transmisji danych (TC - Transmition Complete)
-	__HAL_UART_ENABLE_IT(&huart2, UART_IT_TC);
-	/****************** UART END ******************/
-
-	/****************** TIMER BEGIN ******************/
-	HAL_TIM_Base_Start_IT(&htim1);
-	/****************** TIMER END ******************/
+  /****************** TIMER BEGIN ******************/
+  HAL_TIM_Base_Start_IT(&htim1);
+  /****************** TIMER END ******************/
 
   /* USER CODE END 2 */
 
@@ -190,19 +198,98 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-// Funkcja odpowiedzialna za obsługę przerwania spowodowanego odebraniem danych na UART2
+/**
+ * Funkcja odpowiedzialna za obsługę przerwania spowodowanego odebraniem danych na UART2
+ */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
-	// Musimy sprawdzić czy przerwanie wywołał uart2, a nie coś innego
+	/**
+	 * Musimy sprawdzić czy przerwanie wywołał uart2, a nie coś innego
+	 */
 	if (huart->Instance == USART2) {
+
 		activate_time();
 		activate_date();
 		activate_alarm();
 
-		// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+		/**
+		 * Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+		 */
 		HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
 	}
+	else if (huart->Instance == USART6) {
 
+		is_BT_rx_complete = 0;
+
+		if( (BT_rx_data == 'e') && (BT_array_max_size > 0 && BT_array_max_size <= 2) && (is_BT_data_valid == 1)) {
+
+			if(BT_array_max_size == 1) {
+
+				uart_rx_data = BT_rx_string[0];
+			}
+			else if(BT_array_max_size == 2) {
+
+				uart_rx_data = BT_rx_int;
+			}
+
+			i = 0;
+			BT_array_max_size = 0;
+			is_BT_data_valid = 0;
+			is_BT_rx_complete = 1;
+		}
+		else if (BT_rx_data == 'q') {
+
+			HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);
+			alarm_flag = 0;
+		}
+		else {
+
+			if(BT_rx_data == 't' || BT_rx_data == 'd' || BT_rx_data == 'a' || BT_rx_data == 'T' || BT_rx_data == 'D' || BT_rx_data == 'A') {
+
+				BT_rx_string[0] = BT_rx_data;
+
+				BT_array_max_size = 1;
+				is_BT_data_valid = 1;
+			}
+			else if(BT_rx_data != 'e' && BT_rx_data >= 0) {
+
+				BT_rx_string[i] = BT_rx_data - 48;
+
+				i = i + 1;
+				BT_array_max_size = i;
+
+				if(i == 2) {
+
+					char temp_string[2];
+					char left_part[2], right_part[2];
+
+					sprintf(left_part, "%d", BT_rx_string[0]);	/** np. 1 */
+					sprintf(right_part, "%d", BT_rx_string[1]);	/** np. 2 */
+					strcat(left_part, right_part);	/** dołączenie right_part na koniec left_part (left_part = 12) */
+
+					strcpy(temp_string, left_part);	/** przekopiowanie left_part do temp_string. (temp_string = 12) */
+
+					BT_rx_int = atoi(temp_string);	/** BT_rx_int = 12 */
+
+					i = 0;
+				}
+
+				is_BT_data_valid = 1;
+			}
+		}
+
+		if(is_BT_rx_complete == 1) {
+
+			activate_time();
+			activate_date();
+			activate_alarm();
+		}
+
+		/**
+		 * Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+		 */
+		HAL_UART_Receive_IT(&huart6, &BT_rx_data, 1);
+	}
 }
 
 /* USER CODE END 4 */

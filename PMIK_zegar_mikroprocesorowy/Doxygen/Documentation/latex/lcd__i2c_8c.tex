@@ -1,0 +1,374 @@
+\hypertarget{lcd__i2c_8c}{}\doxysection{lcd\+\_\+i2c.\+c File Reference}
+\label{lcd__i2c_8c}\index{lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_t_i_m_e}{TIME}}
+\begin{DoxyCompactList}\small\item\em Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{lcd__i2c_8c_ac23e73124dc9fabae95671fe71d074a6}{lcd\+\_\+init}} ()
+\begin{DoxyCompactList}\small\item\em Funkcja inicjalizująca wyświetlacz LCD. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_aee37ec264f9862dea9f5294243d4164b}{lcd\+\_\+display\+\_\+refresh}} ()
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za aktualizowanie i wyświetlanie na bieżąco wszystkich danych na wyświetlaczu LCD. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_ad235a86241458b1e7b8771688bfdaf9a}{lcd\+\_\+clear}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja czyszcząca ekran. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a1dd8b52cc0c59d93f157214678f3fbb2}{lcd\+\_\+back\+\_\+light\+\_\+on}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiadająca za włączenie podświetlenia wyświetlacza LCD. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a6e149c75022e98284237f28d20332c49}{lcd\+\_\+back\+\_\+light\+\_\+off}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiadająca za wyłączenie podświetlenia wyświetlacza LCD. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a68e592603e66b23b0360f910f3356877}{lcd\+\_\+set\+\_\+cursor}} (uint8\+\_\+t row, uint8\+\_\+t col)
+\begin{DoxyCompactList}\small\item\em ustawienie kursora w danym wierszu i kolumnie \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a0e989b2e96ae914b4135e6826f8b33f5}{lcd\+\_\+first\+\_\+line}} (void)
+\begin{DoxyCompactList}\small\item\em ustawienie kursora na początku pierwszej linni \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a4ce6d0a4984f6a18e0ede6c4a256595a}{lcd\+\_\+second\+\_\+line}} (void)
+\begin{DoxyCompactList}\small\item\em ustawienie kursora na początku drugiej linni \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_ae687c9dbc4782bbc47353a63c41413ba}{lcd\+\_\+write\+\_\+command}} (uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em wysłanie instrukcji do wyświetlacza \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a9958d5441d79af42a23a03f6229de09d}{lcd\+\_\+write\+\_\+data}} (uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em wysłanie danych do wyświetlacza \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a78c27ec2f4c2ac2f571d258f698440fa}{lcd\+\_\+send\+\_\+string}} (const char $\ast$string)
+\begin{DoxyCompactList}\small\item\em Funkcja wyświetlająca na ekranie napis. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_aa096de5a2ef2e7781a83ca511a073028}{lcd\+\_\+send\+\_\+alarm\+\_\+on\+\_\+msg}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja wyświetlająca na ekranie informację o alarmie. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_ae9e3cbc8e33b1be2367412bc7ec15c61}{lcd\+\_\+send\+\_\+alarm\+\_\+off\+\_\+msg}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja wyświetlająca na ekranie informację o wyłączeniu alarmu. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a9921d0ce9d8e725f4ce76c1466eddaed}{lcd\+\_\+generate\+\_\+own\+\_\+chars}} (void)
+\begin{DoxyCompactList}\small\item\em funkcja do zapisania w pamięci CG RAM, ośmiu zdefiniowanych przez nas znaków \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a3eb771473fdf97b15e278fb97aabfd39}{lcd\+\_\+send\+\_\+own\+\_\+char}} (uint8\+\_\+t char\+\_\+number)
+\begin{DoxyCompactList}\small\item\em funkcja wyświetlająca wybrany znak własny \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a9cecf9ab6248d12eac1f39f1a081b99d}{lcd\+\_\+show\+\_\+week\+\_\+day\+\_\+name}} (uint8\+\_\+t day\+\_\+number)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za wyświetlenie nazwy dnia tygodnia. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{lcd__i2c_8c_a9cfd3eca48cd053e699bb5edd273a592}{lcd\+\_\+show\+\_\+battery\+\_\+level}} (uint8\+\_\+t bat\+\_\+lev)
+\begin{DoxyCompactList}\small\item\em Funkcja wyświetlająca na ekranie poziom naładowania baterii wyświetlacza. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_ac0f6f4326b0222deadeba732d968aaa9}{BL}}
+\begin{DoxyCompactList}\small\item\em RS = 0, wysyłamy instrukcje do LCD. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_a014694cdc4fa3d64d18daa452836c4bb}{uart\+\_\+flag}}
+\begin{DoxyCompactList}\small\item\em Back light. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_a78cf0f7b2fde645191caff92a500ec4b}{col\+\_\+number}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_a3c0aee7bfb6e464e575c6fe45ebf9b86}{battery\+\_\+level}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_af5105c72a61e60d3b44670de20e0c3fb}{addr}} = \mbox{\hyperlink{lcd__i2c_8h_aab25150c611eb3bcd9efa6945d1ef7f7}{LCD\+\_\+\+ADDRESS}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_adc06cb47a0ae8bbb255d2ba682c83507}{tx\+\_\+data}} \mbox{[}4\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_ac5592b998e061dd9ca3e48c5e8931a46}{RS}} = 0x01
+\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_af27e3188294c2df66d975b74a09c001d}{i}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{lcd__i2c_8c_aa5c82199da68dcbb954f8a8ff651293d}{j}}
+\item 
+char \mbox{\hyperlink{lcd__i2c_8c_a07dd2d094d54770ecc3242ed8021d204}{time\+\_\+date\+\_\+buffer}} \mbox{[}12\mbox{]}
+\begin{DoxyCompactList}\small\item\em tablica przechowująca czas i datę, wyświetlane na LCD \end{DoxyCompactList}\item 
+\mbox{\hyperlink{struct_t_i_m_e}{TIME}} \mbox{\hyperlink{lcd__i2c_8c_a2893aa73f23bea0e0033498ad0214e0f}{time}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{lcd__i2c_8c_a6e149c75022e98284237f28d20332c49}\label{lcd__i2c_8c_a6e149c75022e98284237f28d20332c49}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_back\_light\_off@{lcd\_back\_light\_off}}
+\index{lcd\_back\_light\_off@{lcd\_back\_light\_off}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_back\_light\_off()}{lcd\_back\_light\_off()}}
+{\footnotesize\ttfamily void lcd\+\_\+back\+\_\+light\+\_\+off (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiadająca za wyłączenie podświetlenia wyświetlacza LCD. 
+
+Funkcja wyłączająca podświetlenie ekranu. \mbox{\Hypertarget{lcd__i2c_8c_a1dd8b52cc0c59d93f157214678f3fbb2}\label{lcd__i2c_8c_a1dd8b52cc0c59d93f157214678f3fbb2}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_back\_light\_on@{lcd\_back\_light\_on}}
+\index{lcd\_back\_light\_on@{lcd\_back\_light\_on}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_back\_light\_on()}{lcd\_back\_light\_on()}}
+{\footnotesize\ttfamily void lcd\+\_\+back\+\_\+light\+\_\+on (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiadająca za włączenie podświetlenia wyświetlacza LCD. 
+
+Funkcja włączająca podświetlenie ekranu. \mbox{\Hypertarget{lcd__i2c_8c_ad235a86241458b1e7b8771688bfdaf9a}\label{lcd__i2c_8c_ad235a86241458b1e7b8771688bfdaf9a}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_clear@{lcd\_clear}}
+\index{lcd\_clear@{lcd\_clear}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_clear()}{lcd\_clear()}}
+{\footnotesize\ttfamily void lcd\+\_\+clear (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja czyszcząca ekran. 
+
+\mbox{\Hypertarget{lcd__i2c_8c_aee37ec264f9862dea9f5294243d4164b}\label{lcd__i2c_8c_aee37ec264f9862dea9f5294243d4164b}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_display\_refresh@{lcd\_display\_refresh}}
+\index{lcd\_display\_refresh@{lcd\_display\_refresh}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_display\_refresh()}{lcd\_display\_refresh()}}
+{\footnotesize\ttfamily void lcd\+\_\+display\+\_\+refresh (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za aktualizowanie i wyświetlanie na bieżąco wszystkich danych na wyświetlaczu LCD. 
+
+Funkcja odświeżająca dane wyświetlane na ekranie. wyświetlanie godziny na LCD
+
+wyświetlenie poziomu baterii
+
+wyświetlanie daty na LCD
+
+wyświetlanie nazwy dnia tygodnia na LCD\mbox{\Hypertarget{lcd__i2c_8c_a0e989b2e96ae914b4135e6826f8b33f5}\label{lcd__i2c_8c_a0e989b2e96ae914b4135e6826f8b33f5}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_first\_line@{lcd\_first\_line}}
+\index{lcd\_first\_line@{lcd\_first\_line}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_first\_line()}{lcd\_first\_line()}}
+{\footnotesize\ttfamily void lcd\+\_\+first\+\_\+line (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+ustawienie kursora na początku pierwszej linni 
+
+Funkcja ustawiająca kursor na początku pierwszego wiersza ekranu. \mbox{\Hypertarget{lcd__i2c_8c_a9921d0ce9d8e725f4ce76c1466eddaed}\label{lcd__i2c_8c_a9921d0ce9d8e725f4ce76c1466eddaed}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_generate\_own\_chars@{lcd\_generate\_own\_chars}}
+\index{lcd\_generate\_own\_chars@{lcd\_generate\_own\_chars}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_generate\_own\_chars()}{lcd\_generate\_own\_chars()}}
+{\footnotesize\ttfamily void lcd\+\_\+generate\+\_\+own\+\_\+chars (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+funkcja do zapisania w pamięci CG RAM, ośmiu zdefiniowanych przez nas znaków 
+
+Funkcja generująca do 8 własnych, zdefiniowanych przez użytkownika znaków. Przechodzimy na początek pamięci CG RAM
+
+Zapisujemy własne znaki do pamięci CG RAM ~\newline
+\mbox{\Hypertarget{lcd__i2c_8c_ac23e73124dc9fabae95671fe71d074a6}\label{lcd__i2c_8c_ac23e73124dc9fabae95671fe71d074a6}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_init@{lcd\_init}}
+\index{lcd\_init@{lcd\_init}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_init()}{lcd\_init()}}
+{\footnotesize\ttfamily void lcd\+\_\+init (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja inicjalizująca wyświetlacz LCD. 
+
+sekwencja z dokumentacji inicjalizująca wyświetlacz
+
+ustawienie trybu 4-\/bitowego
+
+włączenie kursora, bez migania i podkreślenia
+
+wyczyszczenie wyświetlacza\mbox{\Hypertarget{lcd__i2c_8c_a4ce6d0a4984f6a18e0ede6c4a256595a}\label{lcd__i2c_8c_a4ce6d0a4984f6a18e0ede6c4a256595a}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_second\_line@{lcd\_second\_line}}
+\index{lcd\_second\_line@{lcd\_second\_line}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_second\_line()}{lcd\_second\_line()}}
+{\footnotesize\ttfamily void lcd\+\_\+second\+\_\+line (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+ustawienie kursora na początku drugiej linni 
+
+Funkcja ustawiająca kursor na początku drugiego wiersza ekranu. \mbox{\Hypertarget{lcd__i2c_8c_ae9e3cbc8e33b1be2367412bc7ec15c61}\label{lcd__i2c_8c_ae9e3cbc8e33b1be2367412bc7ec15c61}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_send\_alarm\_off\_msg@{lcd\_send\_alarm\_off\_msg}}
+\index{lcd\_send\_alarm\_off\_msg@{lcd\_send\_alarm\_off\_msg}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_send\_alarm\_off\_msg()}{lcd\_send\_alarm\_off\_msg()}}
+{\footnotesize\ttfamily void lcd\+\_\+send\+\_\+alarm\+\_\+off\+\_\+msg (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja wyświetlająca na ekranie informację o wyłączeniu alarmu. 
+
+\mbox{\Hypertarget{lcd__i2c_8c_aa096de5a2ef2e7781a83ca511a073028}\label{lcd__i2c_8c_aa096de5a2ef2e7781a83ca511a073028}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_send\_alarm\_on\_msg@{lcd\_send\_alarm\_on\_msg}}
+\index{lcd\_send\_alarm\_on\_msg@{lcd\_send\_alarm\_on\_msg}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_send\_alarm\_on\_msg()}{lcd\_send\_alarm\_on\_msg()}}
+{\footnotesize\ttfamily void lcd\+\_\+send\+\_\+alarm\+\_\+on\+\_\+msg (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja wyświetlająca na ekranie informację o alarmie. 
+
+\mbox{\Hypertarget{lcd__i2c_8c_a3eb771473fdf97b15e278fb97aabfd39}\label{lcd__i2c_8c_a3eb771473fdf97b15e278fb97aabfd39}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_send\_own\_char@{lcd\_send\_own\_char}}
+\index{lcd\_send\_own\_char@{lcd\_send\_own\_char}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_send\_own\_char()}{lcd\_send\_own\_char()}}
+{\footnotesize\ttfamily void lcd\+\_\+send\+\_\+own\+\_\+char (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{char\+\_\+number }\end{DoxyParamCaption})}
+
+
+
+funkcja wyświetlająca wybrany znak własny 
+
+Funkcja wyświetlająca na ekranie własny znak użytkownika. \mbox{\Hypertarget{lcd__i2c_8c_a78c27ec2f4c2ac2f571d258f698440fa}\label{lcd__i2c_8c_a78c27ec2f4c2ac2f571d258f698440fa}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_send\_string@{lcd\_send\_string}}
+\index{lcd\_send\_string@{lcd\_send\_string}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_send\_string()}{lcd\_send\_string()}}
+{\footnotesize\ttfamily void lcd\+\_\+send\+\_\+string (\begin{DoxyParamCaption}\item[{const char $\ast$}]{string }\end{DoxyParamCaption})}
+
+
+
+Funkcja wyświetlająca na ekranie napis. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em string} & Napis wyświetlany na ekranie \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lcd__i2c_8c_a68e592603e66b23b0360f910f3356877}\label{lcd__i2c_8c_a68e592603e66b23b0360f910f3356877}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_set\_cursor@{lcd\_set\_cursor}}
+\index{lcd\_set\_cursor@{lcd\_set\_cursor}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_set\_cursor()}{lcd\_set\_cursor()}}
+{\footnotesize\ttfamily void lcd\+\_\+set\+\_\+cursor (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{row,  }\item[{uint8\+\_\+t}]{col }\end{DoxyParamCaption})}
+
+
+
+ustawienie kursora w danym wierszu i kolumnie 
+
+Funkcja ustawiająca kursor ekranu na danej pozycji. ustawienie kursora w kolumnie x w pierwszym wierszu
+
+ustawienie kursora w kolumnie x w drugim wierszu\mbox{\Hypertarget{lcd__i2c_8c_a9cfd3eca48cd053e699bb5edd273a592}\label{lcd__i2c_8c_a9cfd3eca48cd053e699bb5edd273a592}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_show\_battery\_level@{lcd\_show\_battery\_level}}
+\index{lcd\_show\_battery\_level@{lcd\_show\_battery\_level}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_show\_battery\_level()}{lcd\_show\_battery\_level()}}
+{\footnotesize\ttfamily void lcd\+\_\+show\+\_\+battery\+\_\+level (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{battery\+\_\+level }\end{DoxyParamCaption})}
+
+
+
+Funkcja wyświetlająca na ekranie poziom naładowania baterii wyświetlacza. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em battery\+\_\+level} & Poziom baterii wyrażony w procentach (np. 80) \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{lcd__i2c_8c_a9cecf9ab6248d12eac1f39f1a081b99d}\label{lcd__i2c_8c_a9cecf9ab6248d12eac1f39f1a081b99d}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_show\_week\_day\_name@{lcd\_show\_week\_day\_name}}
+\index{lcd\_show\_week\_day\_name@{lcd\_show\_week\_day\_name}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_show\_week\_day\_name()}{lcd\_show\_week\_day\_name()}}
+{\footnotesize\ttfamily void lcd\+\_\+show\+\_\+week\+\_\+day\+\_\+name (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{day\+\_\+number }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za wyświetlenie nazwy dnia tygodnia. 
+
+Funkcja wyświetlająca na ekranie nazwę aktualnego dnia tygodnia. \mbox{\Hypertarget{lcd__i2c_8c_ae687c9dbc4782bbc47353a63c41413ba}\label{lcd__i2c_8c_ae687c9dbc4782bbc47353a63c41413ba}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_write\_command@{lcd\_write\_command}}
+\index{lcd\_write\_command@{lcd\_write\_command}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_write\_command()}{lcd\_write\_command()}}
+{\footnotesize\ttfamily void lcd\+\_\+write\+\_\+command (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+
+
+wysłanie instrukcji do wyświetlacza 
+
+Funkcja odpowiedzialna za wysyłanie instrukcji do wyświetlacza. EN = 1, RS = 0 ~\newline
+
+
+EN = 0, RS = 0 zatrzaśnięcie danych w wyświetlaczu ~\newline
+
+
+EN = 1, RS = 0 ~\newline
+
+
+EN = 0, RS = 0 zatrzaśnięcie danych w wyświetlaczu ~\newline
+
+
+send data via i2c\mbox{\Hypertarget{lcd__i2c_8c_a9958d5441d79af42a23a03f6229de09d}\label{lcd__i2c_8c_a9958d5441d79af42a23a03f6229de09d}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!lcd\_write\_data@{lcd\_write\_data}}
+\index{lcd\_write\_data@{lcd\_write\_data}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{lcd\_write\_data()}{lcd\_write\_data()}}
+{\footnotesize\ttfamily void lcd\+\_\+write\+\_\+data (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+
+
+wysłanie danych do wyświetlacza 
+
+Funkcja odpowiedzialna za wysyłanie danych do wyświetlacza. EN = 1, RS = 1 ~\newline
+
+
+EN = 0, RS = 1 zatrzaśnięcie danych w wyświetlaczu ~\newline
+
+
+EN = 1, RS = 1 ~\newline
+
+
+EN = 0, RS = 1 zatrzaśnięcie danych w wyświetlaczu ~\newline
+
+
+send data via i2c
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{lcd__i2c_8c_af5105c72a61e60d3b44670de20e0c3fb}\label{lcd__i2c_8c_af5105c72a61e60d3b44670de20e0c3fb}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!addr@{addr}}
+\index{addr@{addr}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{addr}{addr}}
+{\footnotesize\ttfamily uint8\+\_\+t addr = \mbox{\hyperlink{lcd__i2c_8h_aab25150c611eb3bcd9efa6945d1ef7f7}{LCD\+\_\+\+ADDRESS}}}
+
+\mbox{\Hypertarget{lcd__i2c_8c_a3c0aee7bfb6e464e575c6fe45ebf9b86}\label{lcd__i2c_8c_a3c0aee7bfb6e464e575c6fe45ebf9b86}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!battery\_level@{battery\_level}}
+\index{battery\_level@{battery\_level}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{battery\_level}{battery\_level}}
+{\footnotesize\ttfamily uint8\+\_\+t battery\+\_\+level}
+
+\mbox{\Hypertarget{lcd__i2c_8c_ac0f6f4326b0222deadeba732d968aaa9}\label{lcd__i2c_8c_ac0f6f4326b0222deadeba732d968aaa9}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!BL@{BL}}
+\index{BL@{BL}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{BL}{BL}}
+{\footnotesize\ttfamily uint8\+\_\+t BL}
+
+
+
+RS = 0, wysyłamy instrukcje do LCD. 
+
+RS = 1, wysyłamy dane do LCD \mbox{\Hypertarget{lcd__i2c_8c_a78cf0f7b2fde645191caff92a500ec4b}\label{lcd__i2c_8c_a78cf0f7b2fde645191caff92a500ec4b}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!col\_number@{col\_number}}
+\index{col\_number@{col\_number}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{col\_number}{col\_number}}
+{\footnotesize\ttfamily uint8\+\_\+t col\+\_\+number}
+
+\mbox{\Hypertarget{lcd__i2c_8c_af27e3188294c2df66d975b74a09c001d}\label{lcd__i2c_8c_af27e3188294c2df66d975b74a09c001d}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!i@{i}}
+\index{i@{i}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{i}{i}}
+{\footnotesize\ttfamily uint8\+\_\+t i}
+
+\mbox{\Hypertarget{lcd__i2c_8c_aa5c82199da68dcbb954f8a8ff651293d}\label{lcd__i2c_8c_aa5c82199da68dcbb954f8a8ff651293d}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!j@{j}}
+\index{j@{j}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{j}{j}}
+{\footnotesize\ttfamily uint8\+\_\+t j}
+
+\mbox{\Hypertarget{lcd__i2c_8c_ac5592b998e061dd9ca3e48c5e8931a46}\label{lcd__i2c_8c_ac5592b998e061dd9ca3e48c5e8931a46}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!RS@{RS}}
+\index{RS@{RS}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{RS}{RS}}
+{\footnotesize\ttfamily uint8\+\_\+t RS = 0x01}
+
+\mbox{\Hypertarget{lcd__i2c_8c_a2893aa73f23bea0e0033498ad0214e0f}\label{lcd__i2c_8c_a2893aa73f23bea0e0033498ad0214e0f}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!time@{time}}
+\index{time@{time}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{time}{time}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_t_i_m_e}{TIME}} time}
+
+\mbox{\Hypertarget{lcd__i2c_8c_a07dd2d094d54770ecc3242ed8021d204}\label{lcd__i2c_8c_a07dd2d094d54770ecc3242ed8021d204}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!time\_date\_buffer@{time\_date\_buffer}}
+\index{time\_date\_buffer@{time\_date\_buffer}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{time\_date\_buffer}{time\_date\_buffer}}
+{\footnotesize\ttfamily char time\+\_\+date\+\_\+buffer\mbox{[}12\mbox{]}}
+
+
+
+tablica przechowująca czas i datę, wyświetlane na LCD 
+
+\mbox{\Hypertarget{lcd__i2c_8c_adc06cb47a0ae8bbb255d2ba682c83507}\label{lcd__i2c_8c_adc06cb47a0ae8bbb255d2ba682c83507}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!tx\_data@{tx\_data}}
+\index{tx\_data@{tx\_data}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{tx\_data}{tx\_data}}
+{\footnotesize\ttfamily uint8\+\_\+t tx\+\_\+data}
+
+\mbox{\Hypertarget{lcd__i2c_8c_a014694cdc4fa3d64d18daa452836c4bb}\label{lcd__i2c_8c_a014694cdc4fa3d64d18daa452836c4bb}} 
+\index{lcd\_i2c.c@{lcd\_i2c.c}!uart\_flag@{uart\_flag}}
+\index{uart\_flag@{uart\_flag}!lcd\_i2c.c@{lcd\_i2c.c}}
+\doxysubsubsection{\texorpdfstring{uart\_flag}{uart\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t uart\+\_\+flag}
+
+
+
+Back light. 
+

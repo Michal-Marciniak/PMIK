@@ -14,4 +14,4 @@ lcd_i2c.c:191:6:lcd_send_alarm_off_msg	8	static
 lcd_i2c.c:203:6:lcd_generate_own_chars	8	static
 lcd_i2c.c:215:6:lcd_send_own_char	16	static
 lcd_i2c.c:254:6:lcd_show_week_day_name	16	static
-lcd_i2c.c:291:6:lcd_show_battery_level	24	static
+lcd_i2c.c:290:6:lcd_show_battery_level	24	static

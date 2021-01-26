@@ -11,7 +11,9 @@
 #include "usart.h"
 #include <string.h>
 
-// Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231
+/**
+ * Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231
+ */
 typedef struct {
 	uint8_t seconds;
 	uint8_t minutes;
@@ -57,7 +59,7 @@ char alarm_details_msg[9];
 /*	alarm	*/
 
 /* UART */
-uint8_t uart_rx_data;
+uint8_t uart_rx_data, BT_rx_data;
 /* UART */
 
 
@@ -72,7 +74,9 @@ void rtc_set_time ()
 	day = time.dayofmonth;
 	year = time.year;
 
-	// czas w RTC będzie taki sam jak w naszym DS3231
+	/**
+	 * czas w RTC będzie taki sam jak w naszym DS3231
+	 */
 	sTime.Hours = decToBcd(hour);
 	sTime.Minutes = decToBcd(min);
 	sTime.Seconds = decToBcd(sec);
@@ -188,13 +192,15 @@ void rtc_set_time ()
 
 }
 
-// Funkcja odpowiedzialna za ustawienie alarmu o danej godzinie, i w danym dniu.
-// Jako parametry przyjmuje ilość dni do alarmu, godzinę, minutę oraz sekundę alarmu
+/**
+ * Funkcja odpowiedzialna za ustawienie alarmu o danej godzinie, i w danym dniu.
+ * Jako parametry przyjmuje ilość dni do alarmu, godzinę, minutę oraz sekundę alarmu
+ */
 void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 {
 	get_Time();
 
-	if( (day >= 0) && (hour >= 0) && (hour < 24) && (min > 0) && (min < 60) && (sec >= 0) && (sec < 60) ) {
+	if( (day >= 0) && (hour >= 0) && (hour < 24) && (min >= 0) && (min < 60) && (sec >= 0) && (sec < 60) ) {
 
 		if(hour > time.hour) {
 
@@ -219,8 +225,6 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 			{
 				Error_Handler();
 			}
-
-			HAL_NVIC_SetPriority(EXTI_LINE_17, 0, 1);	// alarm A ma drugi najwyższy priorytet w układzie
 
 			lcd_clear();
 			sprintf(alarm_details_msg, "%02d:%02d:%02d", hour, min, sec);
@@ -257,8 +261,6 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 					Error_Handler();
 				}
 
-				HAL_NVIC_SetPriority(EXTI_LINE_17, 0, 1);	// alarm A ma drugi najwyższy priorytet w układzie
-
 				lcd_clear();
 				sprintf(alarm_details_msg, "%02d:%02d:%02d", hour, min, sec);
 				lcd_send_string("Alarm na godz.:");
@@ -292,8 +294,6 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
 					{
 						Error_Handler();
 					}
-
-					HAL_NVIC_SetPriority(EXTI_LINE_17, 0, 1);	// alarm A ma drugi najwyższy priorytet w układzie
 
 					lcd_clear();
 					sprintf(alarm_details_msg, "%02d:%02d:%02d", hour, min, sec);
@@ -353,7 +353,9 @@ void rtc_set_alarm (uint8_t day, uint8_t hour, uint8_t min, uint8_t sec)
   /* USER CODE END RTC_Init 5 */
 }
 
-// Funkcja sygnalizująca, że użytkownik ustawia nową godzinę na zegarku
+/**
+ * Funkcja sygnalizująca, że użytkownik ustawia nową godzinę na zegarku
+ */
 void activate_time () {
 
 	if(uart_rx_data == 't' || uart_rx_data == 'T') {
@@ -377,11 +379,16 @@ void activate_time () {
 
 	}
 
-	// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	/**
+	 * Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	 */
 	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+	HAL_UART_Receive_IT(&huart6, &BT_rx_data, 1);
 }
 
-// Funkcja sygnalizująca, że użytkownik ustawia nową datę na zegarku
+/**
+ * Funkcja sygnalizująca, że użytkownik ustawia nową datę na zegarku
+ */
 void activate_date () {
 
 	if(uart_rx_data == 'd' || uart_rx_data == 'D') {
@@ -405,11 +412,16 @@ void activate_date () {
 
 	}
 
-	// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	/**
+	 * Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	 */
 	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+	HAL_UART_Receive_IT(&huart6, &BT_rx_data, 1);
 }
 
-// Funkcja sygnalizująca, że użytkownik ustawia nowy alarm
+/**
+ * Funkcja sygnalizująca, że użytkownik ustawia nowy alarm
+ */
 void activate_alarm () {
 
 	if(uart_rx_data == 'a' || uart_rx_data == 'A') {
@@ -433,8 +445,11 @@ void activate_alarm () {
 
 	}
 
-	// Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	/**
+	 * Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+	 */
 	HAL_UART_Receive_IT(&huart2, &uart_rx_data, 1);
+	HAL_UART_Receive_IT(&huart6, &BT_rx_data, 1);
 }
 
 
@@ -446,20 +461,22 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc) {
 void to_do_on_alarm() {
 
 	HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_SET);
-	//HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_on_msg, strlen(alarm_on_msg));
 	lcd_send_alarm_on_msg();
 }
 
 void to_do_on_alarm_off() {
 
-	//HAL_UART_Transmit_IT(&huart2, (uint8_t *)alarm_off_msg, strlen(alarm_off_msg));
 	lcd_send_alarm_off_msg();
 }
 
-// Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku
+/**
+ * Funkcja odpowiedzialna za wyłączenie alarmu, za pomocą niebieskiego przycisku
+ */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
-	// Sprawdzamy czy przerwanie wywołał niebieski przycisk
+	/**
+	 * Sprawdzamy czy przerwanie wywołał niebieski przycisk
+	 */
 	if(GPIO_Pin == Blue_Button_Pin) {
 
 		HAL_GPIO_WritePin(Buzzer_GPIO_Port, Buzzer_Pin, GPIO_PIN_RESET);

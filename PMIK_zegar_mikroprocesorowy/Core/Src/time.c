@@ -14,21 +14,25 @@
 uint8_t time_to_write[7];
 uint8_t time_to_read[7];
 
-// Funkcja konwertująca wartość dziesiętną na binarną,
-// ponieważ dane zapisywane do rejestrów DS3231 muszą być postaci binarnej
+/**
+ * Funkcja konwertująca wartość dziesiętną na binarną,
+ * ponieważ dane zapisywane do rejestrów DS3231 muszą być postaci binarnej
+ */
 uint8_t decToBcd(int val)
 {
   return (uint8_t)( (val/10*16) + (val%10) );
 }
 
-// Funkcja konwertująca wartość binarną na decymalną,
-// ponieważ dane odczytywane z DS3231 są postaci binarnej, a dane wyświetlane na LCD będą postaci dziesiętnej
+/**
+ * Funkcja konwertująca wartość binarną na decymalną,
+ * ponieważ dane odczytywane z DS3231 są postaci binarnej, a dane wyświetlane na LCD będą postaci dziesiętnej
+ */
 int bcdToDec(uint8_t val)
 {
   return (int)( (val/16*10) + (val%16) );
 }
 
-// Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231
+/**	Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231	*/
 typedef struct {
 	uint8_t seconds;
 	uint8_t minutes;
@@ -41,8 +45,9 @@ typedef struct {
 
 TIME time;
 
-// Metoda odpowiedzialna za ustawienie czasu i daty
-// set_Time(sec, min, hour, dow, dom, month, year)
+/**
+ * Metoda odpowiedzialna za ustawienie czasu i daty
+ */
 void set_Time (uint8_t sec, uint8_t min, uint8_t hour, uint8_t dow, uint8_t dom, uint8_t month, uint8_t year)
 {
 	time_to_write[0] = decToBcd(sec);

@@ -1,0 +1,343 @@
+\hypertarget{standby_8c}{}\doxysection{standby.\+c File Reference}
+\label{standby_8c}\index{standby.c@{standby.c}}
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{struct_t_i_m_e}{TIME}}
+\begin{DoxyCompactList}\small\item\em Struktura do przechowywania czasu i daty, które będziemy odczytywać z DS3231. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{standby_8c_a7f65d5249a015ebf7c0413d3364b5340}{to\+\_\+do\+\_\+after\+\_\+wake\+\_\+up\+\_\+from\+\_\+standby}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za obsługę programu, po wybudzeniu układu z tryby STANDBY. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{standby_8c_a7ec69d527c1d87fc7010bf711fc91373}{to\+\_\+do\+\_\+before\+\_\+going\+\_\+to\+\_\+standby}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za obsługę programu, przed wejściem w tryb STANDBY. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{standby_8c_ab1ed5350afebf3391ef9adb7b99f2608}{go\+\_\+to\+\_\+standby}} (void)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za wejście układu w tryb STANDBY. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{struct_t_i_m_e}{TIME}} \mbox{\hyperlink{standby_8c_a2893aa73f23bea0e0033498ad0214e0f}{time}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a847cc143368c390290f30e0f0e9c6eba}{global\+\_\+counter}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a7c79449a16434b12dbc5227aeac4d68f}{global\+\_\+buffer}} \mbox{[}5\mbox{]}
+\begin{DoxyCompactList}\small\item\em globalny licznik, służący do ustawiania nowego czasu, daty i alarmu ustawionych przez użytkownika ~\newline
+ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a5c5b6d941324d1e8bd10f7674793b836}{time\+\_\+activated\+\_\+flag}}
+\begin{DoxyCompactList}\small\item\em globalny bufor przechowujący nowy czas, datę i alarm ustawione przez użytkownika ~\newline
+ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_abcc3a3242cd782f252805447c7f3493f}{time\+\_\+set\+\_\+flag}}
+\begin{DoxyCompactList}\small\item\em flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy czas \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a99b122f6c758767dc48e1c8e9e8eae07}{new\+\_\+sec}}
+\begin{DoxyCompactList}\small\item\em flaga sygnalizująca, że nowy czas został pomyślnie ustawiony ~\newline
+ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_ada34f13241d10c5894d2072862ff50e7}{new\+\_\+min}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a8e333d39995e2daa6363dbcfaf5a35c4}{new\+\_\+hour}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a426ce0fabaad09cd4e9885e40cdea9a1}{new\+\_\+dow}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a338f041b3244df05413ffbb7021cc66b}{new\+\_\+dom}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_abb49e0fbb94bb6b0c5b294f8f8bae3c1}{new\+\_\+month}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a8cc20bb22a4ee2c81c8ea48b8d69248e}{new\+\_\+year}}
+\item 
+char \mbox{\hyperlink{standby_8c_a610b9034d221ed02a9dad7f681d7bb5a}{new\+\_\+time\+\_\+details\+\_\+msg}} \mbox{[}12\mbox{]}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a4656fac74c0eb49476acf3ed53b02920}{date\+\_\+activated\+\_\+flag}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a650659ca8fcfd629e077636d3bc21012}{date\+\_\+set\+\_\+flag}}
+\begin{DoxyCompactList}\small\item\em flaga sygnalizująca, że w tym momencie użytkownik ustawia nową date \end{DoxyCompactList}\item 
+char \mbox{\hyperlink{standby_8c_ab02c987c0116b738c69148fca54ce45e}{new\+\_\+date\+\_\+details\+\_\+msg}} \mbox{[}12\mbox{]}
+\begin{DoxyCompactList}\small\item\em flaga sygnalizująca, że nowa data została pomyślnie ustawiona ~\newline
+ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a222aa5f77ddda20747c248b44e1eda00}{alarm\+\_\+activated\+\_\+flag}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_af0082cd6fdcdd58f81d880fc25fbbe5c}{alarm\+\_\+set\+\_\+flag}}
+\begin{DoxyCompactList}\small\item\em flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy alarm ~\newline
+ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a1ae0d7e7677a2dff8159b4f237c864dc}{alarm\+\_\+flag}}
+\begin{DoxyCompactList}\small\item\em flaga sygnalizująca, że alarm został pomyślnie ustawiony ~\newline
+ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a3974056349c6cab0167d5c62f39e2a67}{days\+\_\+to\+\_\+alarm}}
+\begin{DoxyCompactList}\small\item\em flaga sygnalizująca włączenie się alarmu ~\newline
+ \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a912612a2733916065ce622f524b05929}{alarm\+\_\+hour}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_aa9db106f5043e8951a23690058a3e2d3}{alarm\+\_\+min}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{standby_8c_a5f57777fe2d9100fdd6b1b9490199abf}{alarm\+\_\+sec}}
+\item 
+bool \mbox{\hyperlink{standby_8c_a031f37438bf6e555c9f17610ee72788e}{keypad\+Switches}} \mbox{[}16\mbox{]} = \{0\}
+\item 
+\mbox{\hyperlink{struct_keypad___wires___type_def}{Keypad\+\_\+\+Wires\+\_\+\+Type\+Def}} \mbox{\hyperlink{standby_8c_ad2b0cede82c40ccea5b7ec2d270a1704}{keypad\+Struct}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{standby_8c_ab1ed5350afebf3391ef9adb7b99f2608}\label{standby_8c_ab1ed5350afebf3391ef9adb7b99f2608}} 
+\index{standby.c@{standby.c}!go\_to\_standby@{go\_to\_standby}}
+\index{go\_to\_standby@{go\_to\_standby}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{go\_to\_standby()}{go\_to\_standby()}}
+{\footnotesize\ttfamily void go\+\_\+to\+\_\+standby (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za wejście układu w tryb STANDBY. 
+
+wykonaj jeśli zaczął się alarm
+
+Przed wejściem w tryb STANDBY, musimy wyczyścić flagę WU (Wake up)
+
+Jeśli używamy RTC do wybudzenia MCU, w tym projekcie wybudza ALARM A, musimy wyczyścić też flagę RTC Wake up ~\newline
+
+
+Przed wejściem w tryb STANDBY, musimy włączyć pin Wake up, aby mógł nas potem wybudzić z tego stanu
+
+Wybudzanie układu z trybu STANDBY, defaultowo co 30 sekund. Włączenie RTC Wake up 0x1\+D4\+C0 = 120\+\_\+000 = 30 sekund, 4000 = 1s
+
+Finalnie wchodzimy w tryb STANDBY ~\newline
+\mbox{\Hypertarget{standby_8c_a7f65d5249a015ebf7c0413d3364b5340}\label{standby_8c_a7f65d5249a015ebf7c0413d3364b5340}} 
+\index{standby.c@{standby.c}!to\_do\_after\_wake\_up\_from\_standby@{to\_do\_after\_wake\_up\_from\_standby}}
+\index{to\_do\_after\_wake\_up\_from\_standby@{to\_do\_after\_wake\_up\_from\_standby}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{to\_do\_after\_wake\_up\_from\_standby()}{to\_do\_after\_wake\_up\_from\_standby()}}
+{\footnotesize\ttfamily void to\+\_\+do\+\_\+after\+\_\+wake\+\_\+up\+\_\+from\+\_\+standby (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za obsługę programu, po wybudzeniu układu z tryby STANDBY. 
+
+wykonaj jeśli zaczął się alarm
+
+Flaga SBF (Standby flag) mówi o tym, czy MCU wybudził się ze stanu standby SBF = 1 -\/$>$ MCU wybudził się ze standby
+
+na początku sprawdzamy czy nie jest ustawiona flaga SBF
+
+wyszyszczenie flagi SBF, aby upewnić się że nie jesteśmy w trybie stanby ~\newline
+
+
+Wyłączenie pinu WAKE UP
+
+Wyłączenie Wake up timer
+
+Porty klawiatury
+
+Piny klawiatury\mbox{\Hypertarget{standby_8c_a7ec69d527c1d87fc7010bf711fc91373}\label{standby_8c_a7ec69d527c1d87fc7010bf711fc91373}} 
+\index{standby.c@{standby.c}!to\_do\_before\_going\_to\_standby@{to\_do\_before\_going\_to\_standby}}
+\index{to\_do\_before\_going\_to\_standby@{to\_do\_before\_going\_to\_standby}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{to\_do\_before\_going\_to\_standby()}{to\_do\_before\_going\_to\_standby()}}
+{\footnotesize\ttfamily void to\+\_\+do\+\_\+before\+\_\+going\+\_\+to\+\_\+standby (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za obsługę programu, przed wejściem w tryb STANDBY. 
+
+wykonaj jeśli zaczął się alarm
+
+wykonaj jeśli użytkownik ustawił nową godzinę
+
+wykonaj jeśli użytkownik ustawił nową datę
+
+wykonaj jeśli użytkownik ustawił nowy czas alarmu
+
+dni to drugi element, ponieważ pierwszy to literka a, mówiąca o tym, że ustawiamy alarm.
+
+ms ~\newline
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{standby_8c_a222aa5f77ddda20747c248b44e1eda00}\label{standby_8c_a222aa5f77ddda20747c248b44e1eda00}} 
+\index{standby.c@{standby.c}!alarm\_activated\_flag@{alarm\_activated\_flag}}
+\index{alarm\_activated\_flag@{alarm\_activated\_flag}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_activated\_flag}{alarm\_activated\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+activated\+\_\+flag}
+
+\mbox{\Hypertarget{standby_8c_a1ae0d7e7677a2dff8159b4f237c864dc}\label{standby_8c_a1ae0d7e7677a2dff8159b4f237c864dc}} 
+\index{standby.c@{standby.c}!alarm\_flag@{alarm\_flag}}
+\index{alarm\_flag@{alarm\_flag}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_flag}{alarm\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+flag}
+
+
+
+flaga sygnalizująca, że alarm został pomyślnie ustawiony ~\newline
+ 
+
+\mbox{\Hypertarget{standby_8c_a912612a2733916065ce622f524b05929}\label{standby_8c_a912612a2733916065ce622f524b05929}} 
+\index{standby.c@{standby.c}!alarm\_hour@{alarm\_hour}}
+\index{alarm\_hour@{alarm\_hour}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_hour}{alarm\_hour}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+hour}
+
+\mbox{\Hypertarget{standby_8c_aa9db106f5043e8951a23690058a3e2d3}\label{standby_8c_aa9db106f5043e8951a23690058a3e2d3}} 
+\index{standby.c@{standby.c}!alarm\_min@{alarm\_min}}
+\index{alarm\_min@{alarm\_min}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_min}{alarm\_min}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+min}
+
+\mbox{\Hypertarget{standby_8c_a5f57777fe2d9100fdd6b1b9490199abf}\label{standby_8c_a5f57777fe2d9100fdd6b1b9490199abf}} 
+\index{standby.c@{standby.c}!alarm\_sec@{alarm\_sec}}
+\index{alarm\_sec@{alarm\_sec}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_sec}{alarm\_sec}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+sec}
+
+\mbox{\Hypertarget{standby_8c_af0082cd6fdcdd58f81d880fc25fbbe5c}\label{standby_8c_af0082cd6fdcdd58f81d880fc25fbbe5c}} 
+\index{standby.c@{standby.c}!alarm\_set\_flag@{alarm\_set\_flag}}
+\index{alarm\_set\_flag@{alarm\_set\_flag}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_set\_flag}{alarm\_set\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+set\+\_\+flag}
+
+
+
+flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy alarm ~\newline
+ 
+
+\mbox{\Hypertarget{standby_8c_a4656fac74c0eb49476acf3ed53b02920}\label{standby_8c_a4656fac74c0eb49476acf3ed53b02920}} 
+\index{standby.c@{standby.c}!date\_activated\_flag@{date\_activated\_flag}}
+\index{date\_activated\_flag@{date\_activated\_flag}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{date\_activated\_flag}{date\_activated\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t date\+\_\+activated\+\_\+flag}
+
+\mbox{\Hypertarget{standby_8c_a650659ca8fcfd629e077636d3bc21012}\label{standby_8c_a650659ca8fcfd629e077636d3bc21012}} 
+\index{standby.c@{standby.c}!date\_set\_flag@{date\_set\_flag}}
+\index{date\_set\_flag@{date\_set\_flag}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{date\_set\_flag}{date\_set\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t date\+\_\+set\+\_\+flag}
+
+
+
+flaga sygnalizująca, że w tym momencie użytkownik ustawia nową date 
+
+\mbox{\Hypertarget{standby_8c_a3974056349c6cab0167d5c62f39e2a67}\label{standby_8c_a3974056349c6cab0167d5c62f39e2a67}} 
+\index{standby.c@{standby.c}!days\_to\_alarm@{days\_to\_alarm}}
+\index{days\_to\_alarm@{days\_to\_alarm}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{days\_to\_alarm}{days\_to\_alarm}}
+{\footnotesize\ttfamily uint8\+\_\+t days\+\_\+to\+\_\+alarm}
+
+
+
+flaga sygnalizująca włączenie się alarmu ~\newline
+ 
+
+\mbox{\Hypertarget{standby_8c_a7c79449a16434b12dbc5227aeac4d68f}\label{standby_8c_a7c79449a16434b12dbc5227aeac4d68f}} 
+\index{standby.c@{standby.c}!global\_buffer@{global\_buffer}}
+\index{global\_buffer@{global\_buffer}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{global\_buffer}{global\_buffer}}
+{\footnotesize\ttfamily uint8\+\_\+t global\+\_\+buffer\mbox{[}5\mbox{]}}
+
+
+
+globalny licznik, służący do ustawiania nowego czasu, daty i alarmu ustawionych przez użytkownika ~\newline
+ 
+
+\mbox{\Hypertarget{standby_8c_a847cc143368c390290f30e0f0e9c6eba}\label{standby_8c_a847cc143368c390290f30e0f0e9c6eba}} 
+\index{standby.c@{standby.c}!global\_counter@{global\_counter}}
+\index{global\_counter@{global\_counter}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{global\_counter}{global\_counter}}
+{\footnotesize\ttfamily uint8\+\_\+t global\+\_\+counter}
+
+\mbox{\Hypertarget{standby_8c_ad2b0cede82c40ccea5b7ec2d270a1704}\label{standby_8c_ad2b0cede82c40ccea5b7ec2d270a1704}} 
+\index{standby.c@{standby.c}!keypadStruct@{keypadStruct}}
+\index{keypadStruct@{keypadStruct}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{keypadStruct}{keypadStruct}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_keypad___wires___type_def}{Keypad\+\_\+\+Wires\+\_\+\+Type\+Def}} keypad\+Struct}
+
+\mbox{\Hypertarget{standby_8c_a031f37438bf6e555c9f17610ee72788e}\label{standby_8c_a031f37438bf6e555c9f17610ee72788e}} 
+\index{standby.c@{standby.c}!keypadSwitches@{keypadSwitches}}
+\index{keypadSwitches@{keypadSwitches}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{keypadSwitches}{keypadSwitches}}
+{\footnotesize\ttfamily bool keypad\+Switches\mbox{[}16\mbox{]} = \{0\}}
+
+\mbox{\Hypertarget{standby_8c_ab02c987c0116b738c69148fca54ce45e}\label{standby_8c_ab02c987c0116b738c69148fca54ce45e}} 
+\index{standby.c@{standby.c}!new\_date\_details\_msg@{new\_date\_details\_msg}}
+\index{new\_date\_details\_msg@{new\_date\_details\_msg}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_date\_details\_msg}{new\_date\_details\_msg}}
+{\footnotesize\ttfamily char new\+\_\+date\+\_\+details\+\_\+msg\mbox{[}12\mbox{]}}
+
+
+
+flaga sygnalizująca, że nowa data została pomyślnie ustawiona ~\newline
+ 
+
+\mbox{\Hypertarget{standby_8c_a338f041b3244df05413ffbb7021cc66b}\label{standby_8c_a338f041b3244df05413ffbb7021cc66b}} 
+\index{standby.c@{standby.c}!new\_dom@{new\_dom}}
+\index{new\_dom@{new\_dom}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_dom}{new\_dom}}
+{\footnotesize\ttfamily uint8\+\_\+t new\+\_\+dom}
+
+\mbox{\Hypertarget{standby_8c_a426ce0fabaad09cd4e9885e40cdea9a1}\label{standby_8c_a426ce0fabaad09cd4e9885e40cdea9a1}} 
+\index{standby.c@{standby.c}!new\_dow@{new\_dow}}
+\index{new\_dow@{new\_dow}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_dow}{new\_dow}}
+{\footnotesize\ttfamily uint8\+\_\+t new\+\_\+dow}
+
+\mbox{\Hypertarget{standby_8c_a8e333d39995e2daa6363dbcfaf5a35c4}\label{standby_8c_a8e333d39995e2daa6363dbcfaf5a35c4}} 
+\index{standby.c@{standby.c}!new\_hour@{new\_hour}}
+\index{new\_hour@{new\_hour}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_hour}{new\_hour}}
+{\footnotesize\ttfamily uint8\+\_\+t new\+\_\+hour}
+
+\mbox{\Hypertarget{standby_8c_ada34f13241d10c5894d2072862ff50e7}\label{standby_8c_ada34f13241d10c5894d2072862ff50e7}} 
+\index{standby.c@{standby.c}!new\_min@{new\_min}}
+\index{new\_min@{new\_min}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_min}{new\_min}}
+{\footnotesize\ttfamily uint8\+\_\+t new\+\_\+min}
+
+\mbox{\Hypertarget{standby_8c_abb49e0fbb94bb6b0c5b294f8f8bae3c1}\label{standby_8c_abb49e0fbb94bb6b0c5b294f8f8bae3c1}} 
+\index{standby.c@{standby.c}!new\_month@{new\_month}}
+\index{new\_month@{new\_month}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_month}{new\_month}}
+{\footnotesize\ttfamily uint8\+\_\+t new\+\_\+month}
+
+\mbox{\Hypertarget{standby_8c_a99b122f6c758767dc48e1c8e9e8eae07}\label{standby_8c_a99b122f6c758767dc48e1c8e9e8eae07}} 
+\index{standby.c@{standby.c}!new\_sec@{new\_sec}}
+\index{new\_sec@{new\_sec}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_sec}{new\_sec}}
+{\footnotesize\ttfamily uint8\+\_\+t new\+\_\+sec}
+
+
+
+flaga sygnalizująca, że nowy czas został pomyślnie ustawiony ~\newline
+ 
+
+\mbox{\Hypertarget{standby_8c_a610b9034d221ed02a9dad7f681d7bb5a}\label{standby_8c_a610b9034d221ed02a9dad7f681d7bb5a}} 
+\index{standby.c@{standby.c}!new\_time\_details\_msg@{new\_time\_details\_msg}}
+\index{new\_time\_details\_msg@{new\_time\_details\_msg}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_time\_details\_msg}{new\_time\_details\_msg}}
+{\footnotesize\ttfamily char new\+\_\+time\+\_\+details\+\_\+msg\mbox{[}12\mbox{]}}
+
+\mbox{\Hypertarget{standby_8c_a8cc20bb22a4ee2c81c8ea48b8d69248e}\label{standby_8c_a8cc20bb22a4ee2c81c8ea48b8d69248e}} 
+\index{standby.c@{standby.c}!new\_year@{new\_year}}
+\index{new\_year@{new\_year}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{new\_year}{new\_year}}
+{\footnotesize\ttfamily uint8\+\_\+t new\+\_\+year}
+
+\mbox{\Hypertarget{standby_8c_a2893aa73f23bea0e0033498ad0214e0f}\label{standby_8c_a2893aa73f23bea0e0033498ad0214e0f}} 
+\index{standby.c@{standby.c}!time@{time}}
+\index{time@{time}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{time}{time}}
+{\footnotesize\ttfamily \mbox{\hyperlink{struct_t_i_m_e}{TIME}} time}
+
+\mbox{\Hypertarget{standby_8c_a5c5b6d941324d1e8bd10f7674793b836}\label{standby_8c_a5c5b6d941324d1e8bd10f7674793b836}} 
+\index{standby.c@{standby.c}!time\_activated\_flag@{time\_activated\_flag}}
+\index{time\_activated\_flag@{time\_activated\_flag}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{time\_activated\_flag}{time\_activated\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t time\+\_\+activated\+\_\+flag}
+
+
+
+globalny bufor przechowujący nowy czas, datę i alarm ustawione przez użytkownika ~\newline
+ 
+
+\mbox{\Hypertarget{standby_8c_abcc3a3242cd782f252805447c7f3493f}\label{standby_8c_abcc3a3242cd782f252805447c7f3493f}} 
+\index{standby.c@{standby.c}!time\_set\_flag@{time\_set\_flag}}
+\index{time\_set\_flag@{time\_set\_flag}!standby.c@{standby.c}}
+\doxysubsubsection{\texorpdfstring{time\_set\_flag}{time\_set\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t time\+\_\+set\+\_\+flag}
+
+
+
+flaga sygnalizująca, że w tym momencie użytkownik ustawia nowy czas 
+

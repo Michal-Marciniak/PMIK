@@ -1,5 +1,5 @@
-time.c:19:9:decToBcd	16	static
-time.c:26:5:bcdToDec	16	static
-time.c:46:6:set_Time	40	static
-time.c:59:6:get_Time	24	static
-time.c:72:6:delay	16	static
+time.c:21:9:decToBcd	16	static
+time.c:30:5:bcdToDec	16	static
+time.c:51:6:set_Time	40	static
+time.c:64:6:get_Time	24	static
+time.c:77:6:delay	16	static

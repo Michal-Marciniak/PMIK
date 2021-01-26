@@ -1,0 +1,173 @@
+\hypertarget{main_8c}{}\doxysection{main.\+c File Reference}
+\label{main_8c}\index{main.c@{main.c}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{main_8c_a70af21c671abfcc773614a9a4f63d920}{System\+Clock\+\_\+\+Config}} (void)
+\begin{DoxyCompactList}\small\item\em Projekt zegara mikroprocesorowego zrealizowanego na płytce Nucleo F401\+RE. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{main_8c_a840291bc02cba5474a4cb46a9b9566fe}{main}} (void)
+\begin{DoxyCompactList}\small\item\em The application entry point. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_ae494a9643f29b87d6d81e5264e60e57b}{HAL\+\_\+\+UART\+\_\+\+Rx\+Cplt\+Callback}} (UART\+\_\+\+Handle\+Type\+Def $\ast$huart)
+\begin{DoxyCompactList}\small\item\em Funkcja odpowiedzialna za obsługę przerwania spowodowanego odebraniem danych na UART2. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{main_8c_a1730ffe1e560465665eb47d9264826f9}{Error\+\_\+\+Handler}} (void)
+\begin{DoxyCompactList}\small\item\em This function is executed in case of error occurrence. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_ae713a6952b3dfd08b26cc09008807094}{uart\+\_\+rx\+\_\+data}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_af37828397460d90a0e0cac8028637c95}{BT\+\_\+rx\+\_\+data}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_af27e3188294c2df66d975b74a09c001d}{i}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_ad497d6b7afce5ef935c1ad8466021b58}{is\+\_\+\+BT\+\_\+rx\+\_\+complete}}
+\item 
+char \mbox{\hyperlink{main_8c_a14470a32e0fcf4d7519edd443e61253f}{BT\+\_\+rx\+\_\+string}} \mbox{[}2\mbox{]}
+\item 
+int \mbox{\hyperlink{main_8c_ad4ba9027f52602a50ca1b63233e23bb2}{BT\+\_\+rx\+\_\+int}}
+\item 
+int \mbox{\hyperlink{main_8c_a9b6f79183e4d7eb3d83969150cc2687d}{BT\+\_\+array\+\_\+max\+\_\+size}}
+\item 
+int \mbox{\hyperlink{main_8c_ad9ead33fc5443369cd2ba3045d357581}{is\+\_\+\+BT\+\_\+data\+\_\+valid}}
+\item 
+uint8\+\_\+t \mbox{\hyperlink{main_8c_a1ae0d7e7677a2dff8159b4f237c864dc}{alarm\+\_\+flag}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{main_8c_a1730ffe1e560465665eb47d9264826f9}\label{main_8c_a1730ffe1e560465665eb47d9264826f9}} 
+\index{main.c@{main.c}!Error\_Handler@{Error\_Handler}}
+\index{Error\_Handler@{Error\_Handler}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{Error\_Handler()}{Error\_Handler()}}
+{\footnotesize\ttfamily void Error\+\_\+\+Handler (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+This function is executed in case of error occurrence. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+\mbox{\Hypertarget{main_8c_ae494a9643f29b87d6d81e5264e60e57b}\label{main_8c_ae494a9643f29b87d6d81e5264e60e57b}} 
+\index{main.c@{main.c}!HAL\_UART\_RxCpltCallback@{HAL\_UART\_RxCpltCallback}}
+\index{HAL\_UART\_RxCpltCallback@{HAL\_UART\_RxCpltCallback}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{HAL\_UART\_RxCpltCallback()}{HAL\_UART\_RxCpltCallback()}}
+{\footnotesize\ttfamily void HAL\+\_\+\+UART\+\_\+\+Rx\+Cplt\+Callback (\begin{DoxyParamCaption}\item[{UART\+\_\+\+Handle\+Type\+Def $\ast$}]{huart }\end{DoxyParamCaption})}
+
+
+
+Funkcja odpowiedzialna za obsługę przerwania spowodowanego odebraniem danych na UART2. 
+
+Musimy sprawdzić czy przerwanie wywołał uart2, a nie coś innego
+
+Po odebraniu danych, nasłuchuj ponownie na kolejne znaki
+
+np. 1
+
+np. 2
+
+dołączenie right\+\_\+part na koniec left\+\_\+part (left\+\_\+part = 12)
+
+przekopiowanie left\+\_\+part do temp\+\_\+string. (temp\+\_\+string = 12)
+
+BT\+\_\+rx\+\_\+int = 12
+
+Po odebraniu danych, nasłuchuj ponownie na kolejne znaki\mbox{\Hypertarget{main_8c_a840291bc02cba5474a4cb46a9b9566fe}\label{main_8c_a840291bc02cba5474a4cb46a9b9566fe}} 
+\index{main.c@{main.c}!main@{main}}
+\index{main@{main}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+The application entry point. 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em int} & \\
+\hline
+\end{DoxyRetVals}
+Wpisanie do rejestru RTC, czasu i daty pobranych z modułu RTC, aby czas w RTC był aktualny
+
+Funkcja odpowiedzialna za odbiór jednego znaku z uart2 w trybie przerwaniowym, i zapisanie go w zmiennej uart\+\_\+rx\+\_\+data. Po odebraniu znaku, nastąpi przerwanie które zostanie obsłużone przez funkcję callback HAL\+\_\+\+UART\+\_\+\+Rx\+Cplt\+Callback.\mbox{\Hypertarget{main_8c_a70af21c671abfcc773614a9a4f63d920}\label{main_8c_a70af21c671abfcc773614a9a4f63d920}} 
+\index{main.c@{main.c}!SystemClock\_Config@{SystemClock\_Config}}
+\index{SystemClock\_Config@{SystemClock\_Config}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{SystemClock\_Config()}{SystemClock\_Config()}}
+{\footnotesize\ttfamily void System\+Clock\+\_\+\+Config (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+Projekt zegara mikroprocesorowego zrealizowanego na płytce Nucleo F401\+RE. 
+
+System Clock Configuration.
+
+Układ posiada możliwość wyświetlania czasu, daty oraz dnia tygodnia na wyświetlaczu LCD HD44780. Wyświetlacz podłączony jest do płytki za pomocą interfejsu I2C. Dodatkowo układ posiada moduł RTC czasu rzeczywistego, dzięki któremu możliwe jest zapamiętanie aktualnego czasu i daty, nawet po wyłączeniu zasilania mikroprocesora. Za pomocą klawiatury w komputerze, użtykownik jest w stanie zmienić czas, datę lub nastawić alarm. Komunikacja ta odbywa się za pomocą intefejsu USART.
+
+
+\begin{DoxyRetVals}{Return values}
+{\em None} & \\
+\hline
+\end{DoxyRetVals}
+Configure the main internal regulator output voltage
+
+Initializes the RCC Oscillators according to the specified parameters in the RCC\+\_\+\+Osc\+Init\+Type\+Def structure.
+
+Initializes the CPU, AHB and APB buses clocks
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{main_8c_a1ae0d7e7677a2dff8159b4f237c864dc}\label{main_8c_a1ae0d7e7677a2dff8159b4f237c864dc}} 
+\index{main.c@{main.c}!alarm\_flag@{alarm\_flag}}
+\index{alarm\_flag@{alarm\_flag}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{alarm\_flag}{alarm\_flag}}
+{\footnotesize\ttfamily uint8\+\_\+t alarm\+\_\+flag}
+
+\mbox{\Hypertarget{main_8c_a9b6f79183e4d7eb3d83969150cc2687d}\label{main_8c_a9b6f79183e4d7eb3d83969150cc2687d}} 
+\index{main.c@{main.c}!BT\_array\_max\_size@{BT\_array\_max\_size}}
+\index{BT\_array\_max\_size@{BT\_array\_max\_size}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{BT\_array\_max\_size}{BT\_array\_max\_size}}
+{\footnotesize\ttfamily int BT\+\_\+array\+\_\+max\+\_\+size}
+
+\mbox{\Hypertarget{main_8c_af37828397460d90a0e0cac8028637c95}\label{main_8c_af37828397460d90a0e0cac8028637c95}} 
+\index{main.c@{main.c}!BT\_rx\_data@{BT\_rx\_data}}
+\index{BT\_rx\_data@{BT\_rx\_data}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{BT\_rx\_data}{BT\_rx\_data}}
+{\footnotesize\ttfamily uint8\+\_\+t BT\+\_\+rx\+\_\+data}
+
+\mbox{\Hypertarget{main_8c_ad4ba9027f52602a50ca1b63233e23bb2}\label{main_8c_ad4ba9027f52602a50ca1b63233e23bb2}} 
+\index{main.c@{main.c}!BT\_rx\_int@{BT\_rx\_int}}
+\index{BT\_rx\_int@{BT\_rx\_int}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{BT\_rx\_int}{BT\_rx\_int}}
+{\footnotesize\ttfamily int BT\+\_\+rx\+\_\+int}
+
+\mbox{\Hypertarget{main_8c_a14470a32e0fcf4d7519edd443e61253f}\label{main_8c_a14470a32e0fcf4d7519edd443e61253f}} 
+\index{main.c@{main.c}!BT\_rx\_string@{BT\_rx\_string}}
+\index{BT\_rx\_string@{BT\_rx\_string}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{BT\_rx\_string}{BT\_rx\_string}}
+{\footnotesize\ttfamily char BT\+\_\+rx\+\_\+string\mbox{[}2\mbox{]}}
+
+\mbox{\Hypertarget{main_8c_af27e3188294c2df66d975b74a09c001d}\label{main_8c_af27e3188294c2df66d975b74a09c001d}} 
+\index{main.c@{main.c}!i@{i}}
+\index{i@{i}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{i}{i}}
+{\footnotesize\ttfamily uint8\+\_\+t i}
+
+\mbox{\Hypertarget{main_8c_ad9ead33fc5443369cd2ba3045d357581}\label{main_8c_ad9ead33fc5443369cd2ba3045d357581}} 
+\index{main.c@{main.c}!is\_BT\_data\_valid@{is\_BT\_data\_valid}}
+\index{is\_BT\_data\_valid@{is\_BT\_data\_valid}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{is\_BT\_data\_valid}{is\_BT\_data\_valid}}
+{\footnotesize\ttfamily int is\+\_\+\+BT\+\_\+data\+\_\+valid}
+
+\mbox{\Hypertarget{main_8c_ad497d6b7afce5ef935c1ad8466021b58}\label{main_8c_ad497d6b7afce5ef935c1ad8466021b58}} 
+\index{main.c@{main.c}!is\_BT\_rx\_complete@{is\_BT\_rx\_complete}}
+\index{is\_BT\_rx\_complete@{is\_BT\_rx\_complete}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{is\_BT\_rx\_complete}{is\_BT\_rx\_complete}}
+{\footnotesize\ttfamily uint8\+\_\+t is\+\_\+\+BT\+\_\+rx\+\_\+complete}
+
+\mbox{\Hypertarget{main_8c_ae713a6952b3dfd08b26cc09008807094}\label{main_8c_ae713a6952b3dfd08b26cc09008807094}} 
+\index{main.c@{main.c}!uart\_rx\_data@{uart\_rx\_data}}
+\index{uart\_rx\_data@{uart\_rx\_data}!main.c@{main.c}}
+\doxysubsubsection{\texorpdfstring{uart\_rx\_data}{uart\_rx\_data}}
+{\footnotesize\ttfamily uint8\+\_\+t uart\+\_\+rx\+\_\+data}
+
